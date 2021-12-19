@@ -17,6 +17,7 @@ import { SunIcon, MoonIcon } from '@chakra-ui/icons'
 import { Select } from '@chakra-ui/select'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export default function LoginPage() {
   // local state
@@ -41,6 +42,11 @@ export default function LoginPage() {
     }
   }
 
+  const navigate = useNavigate()
+  const handleSubmit = () => {
+    navigate('/dashboard')
+  }
+
   return (
     <Flex
       minH='100vh'
@@ -48,17 +54,18 @@ export default function LoginPage() {
       justify='center'
       bg={useColorModeValue('gray.100', 'gray.800')}
     >
-      {!submitted ? <Stack spacing={7} mx='auto' maxW='lg' py={12} px={6}>
-        <Stack align={'center'}>
-          <Flex align={'center'} justify='center'>
-            <Image display={['none', 'block']} mr="4" height='64px' width='64px' src="OneHealth-logo.png"></Image>
-            <Heading color={textColor} fontSize='4xl'>
+      <Stack spacing={7} mx='auto' maxW='lg' py={12} px={6}>
+        <Stack align='center'>
+          <Flex align='center' justify='center'>
+            <Heading w='fit-content' textAlign='center' color={textColor} fontSize='4xl'>
               Welcome to OneHealth
             </Heading>
+            <Image display={['none', 'block']} ml='4' height='50px' width='50px' src='OneHealth-logo.png' />
           </Flex>
-          <Text align={'center'} fontSize='lg' color='gray.500'>
-            sign in to get started! <ColorModeToggleButton />
+          <Text align='center' fontSize='lg' color='gray.500'>
+            sign in to get started! <ColorModeToggleButton ml={3} />
           </Text>
+
         </Stack>
         <Box
           rounded='lg'
@@ -103,9 +110,9 @@ export default function LoginPage() {
                 justify='space-between'
               >
                 <Checkbox colorScheme='yellow'>Remember me</Checkbox>
-                <Link color={textColor}>Forgot password?</Link>
+                <Link color={textColor}>Sign up instead</Link>
               </Stack>
-              <Button onClick={() => setSubmitted(true)} bgColor={btnColor} colorScheme='yellow'>Sign in</Button>
+              <Button onClick={handleSubmit} bgColor={btnColor} colorScheme='yellow'>Sign in</Button>
             </Stack>
           </Stack>
         </Box>

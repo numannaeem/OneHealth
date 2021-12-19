@@ -1,15 +1,35 @@
-import { extendTheme } from '@chakra-ui/react'
+import { theme } from '@chakra-ui/react'
 
-// 3. extend the theme
-const theme = extendTheme({
-  initialColorMode: 'light',
-  useSystemColorMode: true
-  // colors: {
-  // 	brand : {
-  // 		100: '#ff0000',
-  // 		900: '#ff00ff',
-  // 	}
-  // }
-})
+const customTheme = {
+  ...theme,
+  colors: {
+    ...theme.colors,
+    main: {
+      50: '#FFF9E5',
+      100: '#FFEEB8',
+      200: '#FFE38A',
+      300: '#FFD85C',
+      400: '#FFCE2E',
+      500: '#FFC300',
+      600: '#CC9C00',
+      700: '#997500',
+      800: '#664E00',
+      900: '#332700'
+    },
+    secondary: {
+      background: '#FBF7EF',
+      link: '#4A5568',
+      card: '#ffffff',
+      inputHelper: '#CBD5E0'
+    },
+    navItem: {
+      50: '#F7FAFC',
+      100: '#EDF2F7',
+      400: '#A0AEC0',
+      500: '#718096',
+      600: '#4A5568'
+    }
+  }
+}
 
-export default theme
+export default customTheme
