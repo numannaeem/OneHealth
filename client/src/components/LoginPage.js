@@ -19,9 +19,10 @@ import { useColorMode } from '@chakra-ui/color-mode'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-export default function LoginPage () {
+export default function LoginPage() {
   // local state
   const [username, setUsername] = useState('')
+  const [submitted, setSubmitted] = useState(false)
   const [password, setPassword] = useState('')
   const [accType, setAccType] = useState(null)
 
@@ -115,7 +116,7 @@ export default function LoginPage () {
             </Stack>
           </Stack>
         </Box>
-      </Stack>
-    </Flex>
+      </Stack > : <Heading color={textColor}>Dashboard</Heading>}
+    </Flex >
   )
 }
