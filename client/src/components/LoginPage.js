@@ -116,7 +116,7 @@ export default function LoginPage() {
             </Stack>
           </Stack>
         </Box>
-      </Stack > : <Heading color={textColor}>Dashboard</Heading>}
+      </Stack >
     </Flex >
   )
 }

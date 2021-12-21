@@ -2,15 +2,21 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const appSchema = new Schema({
-    time: {
-        type: String,
+    date: {
+        type: Date,
         required: true,
     },
 
     status: {
         type: String,
         required: true,
+        default: 'P',
         enum: ['A', 'P', 'R']
+    },
+
+    description: {
+        type: String,
+        required: true,
     },
 
     doctor: {

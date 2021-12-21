@@ -7,6 +7,11 @@ const patientSchema = new Schema({
         ref: 'User'
     },
 
+    age: {
+        type: Number,
+        required: true
+    },
+
     name: {
         type: String,
         required: true
@@ -27,6 +32,13 @@ const patientSchema = new Schema({
         type: String,
         required: true
     },
+
+    appointments: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Appointments'
+        }
+    ]
 })
 
-module.exporst = mongoose.model('Patient', patientSchema);
+module.exports = mongoose.model('Patient', patientSchema);

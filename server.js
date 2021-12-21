@@ -14,6 +14,8 @@ const LocalStrategy = require('passport-local')
 const User = require('./models/user.js')
 const ExpressError = require('./utils/ExpressError')
 const catchAsync = require('./utils/catchAsync')
+const userRoutes = require('./routes/user');
+const patientRoutes = require('./routes/patient')
 
 mongoose.connect('mongodb://localhost:27017/onehealth', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
@@ -46,15 +48,28 @@ passport.deserializeUser(User.deserializeUser())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 
-//Routes go here
+app.use('/', userRoutes);
+app.use('/patients', patientRoutes);
 
-app.get('/', (req, res) => {
-    res.send('Test')
+app.get('/isAuth', (req, res) => {
+    const message = {}
+    if (req.session.passport) {
+        message.authenticated = true,
+            message.user = req.session.passport.user
+
+    } else {
+        message.authenticated = false
+    }
+    res.status(200).json(message)
 })
 
 // Error Handler
 app.use(function (err, req, res, next) {
-    console.dir(err)
+    const { statusCode = 500 } = err
+    if (!err.message) {
+        err.message = 'Something went wrong'
+    }
+    res.status(statusCode).json(err)
 });
 
 app.listen(3000, () => {

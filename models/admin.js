@@ -8,6 +8,13 @@ const adminSchema = new Schema({
         ref: 'User'
     },
 
+    appointments: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Appointment'
+        }
+    ]
+
 })
 
 module.exports = mongoose.model('Admin', adminSchema)

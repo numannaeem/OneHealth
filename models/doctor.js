@@ -7,6 +7,12 @@ const doctorSchema = new Schema({
         ref: 'User'
     },
 
+    available: {
+        type: Boolean,
+        required: true,
+        default: true
+    },
+
     name: {
         type: String,
         required: true
@@ -27,4 +33,4 @@ const doctorSchema = new Schema({
     }
 })
 
-moudle.exports = mongoose.model('Doctor', doctorSchema)
+module.exports = mongoose.model('Doctor', doctorSchema)
