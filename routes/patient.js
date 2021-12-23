@@ -49,6 +49,53 @@ const canModify = catchAsync(async (req, res, next) => {
 
 //Routes to edit patient details
 
+router.get('/:id', catchAsync(async (req, res) => {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new ExpressError('User not found', 404);
+    }
+    const patient = await Patient.findById(id).populate('user').populate('appointments');
+    if (!patient) {
+        throw new ExpressError('User not found', 404)
+    }
+
+    return res.status(200).json(patient)
+
+}))
+
+router.patch('/:id', validatePatient, catchAsync(async (req, res) => {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new ExpressError('User not found', 404);
+    }
+    const { age, name, address, gender, mobile } = req.body;
+    const update = { age, name, address, gender, mobile };
+    const updatedPatient = await Patient.findByIdAndUpdate(id, update, { new: true });
+    return res.status(201).json(updatedPatient)
+}))
+
+router.delete('/:id', validatePatient, catchAsync(async (req, res) => {
+
+    const { id } = req.params
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new ExpressError('User not found', 404);
+    }
+    const deletedPatient = await Patient.findByIdAndDelete(id).populate('appointments').populate('user')
+    const userId = deletedPatient.user._id;
+    await User.findByIdAndDelete(userId);
+    if (deletedPatient.appointments.length) {
+        for (appointment of deletedPatient.appointments) {
+            const appId = appointment._id
+            const deletedApp = await Appointment.findByIdAndDelete(appId).populate('doctor')
+            await Doctor.findByIdAndUpdate(deletedApp.doctor._id, { $pull: { appointments: appId } })
+        }
+    }
+
+    return res.status(200).json(deletedPatient)
+}))
+//________________________________________________________________
+
+//Routes show all reports and get selected reports (Create after doctor routes)
 
 //________________________________________________________________
 
@@ -68,6 +115,9 @@ router.get('/:id/appointments', validatePatient, catchAsync(async (req, res) => 
 router.post('/:id/appointments', validatePatient, catchAsync(async (req, res) => {
     const { id } = req.params;
     const { datetime, description, doctorId } = req.body
+    if (isNaN(Date.parse(datetime))) {
+        throw new ExpressError('Invalid Date', 403)
+    }
     const patient = await Patient.findById(id);
     if (!mongoose.Types.ObjectId.isValid(doctorId)) {
         throw new ExpressError('Doctor not found', 404);
@@ -84,12 +134,15 @@ router.post('/:id/appointments', validatePatient, catchAsync(async (req, res) =>
     doctor.appointments.push(appointment)
     await patient.save();
     await doctor.save();
-    return res.status(200).json(savedApp)
-}))
+    return res.status(201).json(savedApp)
+})) // Fix  "Maximum call stack size exceeded" error
 
 router.patch('/:id/appointments/:appId', validatePatient, canModify, catchAsync(async (req, res) => {
-    const { id, appId } = req.params;
+    const { appId } = req.params;
     const { datetime, description, doctorId } = req.body
+    if (isNaN(Date.parse(datetime))) {
+        throw new ExpressError('Invalid Date', 403)
+    }
     const doctor = await Doctor.findById(doctorId);
     if (!doctor) {
         throw new ExpressError('User not found', 404)
@@ -99,7 +152,7 @@ router.patch('/:id/appointments/:appId', validatePatient, canModify, catchAsync(
     if (!updatedApp) {
         throw new ExpressError('No Appointments Yet', 404)
     }
-    return res.status(200).json(updatedApp)
+    return res.status(201).json(updatedApp)
 }))
 
 router.delete('/:id/appointments/:appId', validatePatient, canModify, catchAsync(async (req, res) => {
@@ -133,7 +186,7 @@ router.post('/register', catchAsync(async (req, res) => {
             return next(err)
         }
     })
-    return res.status(200).json(savedPatient)
+    return res.status(201).json(savedPatient)
 
 }))
 
