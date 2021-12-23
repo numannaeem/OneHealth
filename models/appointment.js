@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const appSchema = new Schema({
-    date: {
-        type: Date,
+    datetime: {
+        type: String,
         required: true,
     },
 

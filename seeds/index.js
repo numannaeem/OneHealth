@@ -27,7 +27,7 @@ insertDoctor().then(() => {
     mongoose.connection.close()
 })
 
-insertPatient().then(() => {
-    console.log(`Inserted ${patients.length} values`);
-    mongoose.connection.close()
-})
+// insertPatient().then(() => {
+//     console.log(`Inserted ${patients.length} values`);
+//     mongoose.connection.close()
+// })

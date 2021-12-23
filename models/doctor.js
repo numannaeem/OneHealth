@@ -30,7 +30,14 @@ const doctorSchema = new Schema({
     DOB: {
         type: Date,
         required: true
-    }
+    },
+
+    appointments: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Appointments'
+        }
+    ]
 })
 
 module.exports = mongoose.model('Doctor', doctorSchema)
