@@ -28,7 +28,7 @@ const doctorSchema = new Schema({
     experience: Number,
 
     DOB: {
-        type: Date,
+        type: String,
         required: true
     },
 

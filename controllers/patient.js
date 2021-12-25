@@ -7,7 +7,17 @@ const Admin = require('../models/admin');
 const Doctor = require('../models/doctor');
 const ExpressError = require('../utils/ExpressError');
 
-module.exports.getPatients = async (req, res) => {
+
+module.exports.getAllPatients = async (req, res) => {
+    const patients = await Patient.find({}).populate('user').populate('appointments');
+    if (!patients.length) {
+        throw new ExpressError('Patients not found', 404)
+    }
+
+    return res.status(200).json(patients)
+}
+
+module.exports.getPatient = async (req, res) => {
     const { id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
         throw new ExpressError('User not found', 404);
@@ -115,9 +125,10 @@ module.exports.deleteAppointment = async (req, res) => {
 }
 
 module.exports.register = async (req, res) => {
-    const { email, role, password, age, name, address, gender, mobile } = req.body
-    const foundPatient = await User.findOne({ email })
+    const { email, password, age, name, address, gender, mobile } = req.body
+    const role = 'patient'
     const appointments = []
+    const foundPatient = await User.findOne({ email })
     if (foundPatient) {
         throw new ExpressError('User Already Exists', 403)
     }
