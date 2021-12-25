@@ -4,7 +4,6 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Checkbox,
   Stack,
   Link,
   Image,
@@ -16,7 +15,7 @@ import {
 import { SunIcon, MoonIcon } from '@chakra-ui/icons'
 import { Select } from '@chakra-ui/select'
 import { useColorMode } from '@chakra-ui/color-mode'
-import { useEffect, useState } from 'react'
+import {  useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import baseUrl from '../baseUrl'
 
@@ -60,9 +59,7 @@ export default function LoginPage ({setUserData}) {
       })
       if(res.ok) {
         const jsonRes = await res.json()
-        localStorage.setItem('username',username)
-        localStorage.setItem('password',password)
-        localStorage.setItem('role',role)
+        localStorage.setItem('oneHealth',JSON.stringify({username, password, role}))
         setUserData(jsonRes)
         navigate('/dashboard')
       }
@@ -104,13 +101,13 @@ export default function LoginPage ({setUserData}) {
         <Box rounded='lg' bg={bgColor} boxShadow='lg' p={8}>
           <Stack spacing={3}>
             <FormControl id='accountType'>
-              <FormLabel>User type </FormLabel>
+              <FormLabel>User type</FormLabel>
               <Select
                 onChange={e => setRole(e.target.value.toLowerCase())}
-                placeholder='Select option'
               >
+                <option disabled >Select one</option>
                 <option value='doctor'>Doctor</option>
-                <option value='patient'>Patient</option>
+                <option selected value='patient'>Patient</option>
                 <option value='admin'>Admin</option>
               </Select>
             </FormControl>
@@ -138,7 +135,6 @@ export default function LoginPage ({setUserData}) {
                 align='start'
                 justify='space-between'
               >
-                <Checkbox colorScheme='yellow'>Remember me</Checkbox>
                 <Link href='/register' color={textColor}>
                   Sign up instead
                 </Link>

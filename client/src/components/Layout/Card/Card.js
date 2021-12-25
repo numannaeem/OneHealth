@@ -19,7 +19,8 @@ export default function Card ({
   bg,
   color,
   children,
-  _hover
+  _hover,
+  onClick
 }) {
   const adaptiveCardBg = useColorModeValue('white', 'gray.800')
   const adaptiveCardText = useColorModeValue('gray.800', 'white')
@@ -91,6 +92,7 @@ export default function Card ({
         )
   return (
     <Box
+      onClick={onClick}
       _hover={_hover}
       transition='all 100ms'
       width='100%'

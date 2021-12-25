@@ -1,24 +1,29 @@
 import React from 'react'
-import { SimpleGrid, Text, Flex } from '@chakra-ui/react'
-import { PageContainer, PageContent, Nav, Footer, Card } from '../Layout'
-import { Route, Routes, useNavigate } from 'react-router-dom'
+import { PageContainer, Footer } from '../Layout'
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import PatientNav from '../Layout/Nav/PatientNav'
 import PatientCards from './PatientCards'
 import NewAppointment from './NewAppointment'
+import ViewAppointments from './ViewAppointments'
 
-export default function PatientDashboard ({userData}) {
-
+export default function PatientDashboard ({ userData, doctors }) {
   const navigate = useNavigate()
-  console.log(userData)
-  if(!userData)
-      navigate('/login')
+  if (!userData) navigate('/login')
 
   return (
     <PageContainer isFixedNav>
-      <PatientNav name={userData.email} />
+      <PatientNav name={userData.name} />
       <Routes>
-        <Route path='/' element={<PatientCards />} />
-        <Route path='/new-appointment' element={<NewAppointment />} />
+        <Route path='/' element={<PatientCards userData={userData} />} />
+        <Route
+          path='/new-appointment'
+          element={<NewAppointment doctors={doctors} userId={userData._id} />}
+        />
+        <Route
+          path='/appointments'
+          element={<ViewAppointments userId={userData._id} />}
+        />
+        <Route path='/:anythingElse' element={<Navigate to='/' />} />
       </Routes>
       <Footer />
     </PageContainer>

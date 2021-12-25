@@ -4,13 +4,11 @@ import {
   Container,
   Image,
   Stack,
-  Link,
   Text,
   Icon,
   Button,
   Menu,
   MenuItem,
-  MenuDivider,
   MenuGroup,
   MenuList,
   MenuButton,
@@ -32,10 +30,15 @@ export default function PatientNav ({name}) {
   const { toggleColorMode } = useColorMode()
   const ColorModeToggleButton = props => {
     if (colorMode === 'dark') {
-      return <SunIcon {...props} onClick={toggleColorMode} />
+      return <SunIcon cursor='pointer' {...props} onClick={toggleColorMode} />
     } else {
-      return <MoonIcon {...props} onClick={toggleColorMode} />
+      return <MoonIcon cursor='pointer' {...props} onClick={toggleColorMode} />
     }
+  }
+
+  const signOut = () => {
+    localStorage.removeItem('oneHealth')
+    window.location.reload()
   }
 
 	const navigate = useNavigate()
@@ -78,7 +81,7 @@ export default function PatientNav ({name}) {
               <MenuList>
                 <MenuGroup title='Manage Appointments'>
                   <MenuItem onClick={() => navigate('/dashboard/new-appointment')}>New Appointment</MenuItem>
-                  <MenuItem>View Appointments</MenuItem>
+                  <MenuItem onClick={() => navigate('/dashboard/appointments')}>View Appointments</MenuItem>
                 </MenuGroup>
               </MenuList>
             </Menu>
@@ -97,7 +100,7 @@ export default function PatientNav ({name}) {
               <MenuList>
                 <MenuGroup title='Profile'>
                   <MenuItem>My Account</MenuItem>
-                  <MenuItem>Sign Out </MenuItem>
+                  <MenuItem onClick={signOut} >Sign Out </MenuItem>
                 </MenuGroup>
               </MenuList>
             </Menu>

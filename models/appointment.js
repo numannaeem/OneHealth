@@ -3,7 +3,7 @@ const { Schema } = mongoose
 
 const appSchema = new Schema({
     datetime: {
-        type: String,
+        type: Date,
         required: true,
     },
 

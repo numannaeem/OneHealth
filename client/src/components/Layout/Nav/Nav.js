@@ -4,13 +4,11 @@ import {
   Container,
   Image,
   Stack,
-  Link,
   Text,
   Icon,
   Button,
   Menu,
   MenuItem,
-  MenuDivider,
   MenuGroup,
   MenuList,
   MenuButton,
@@ -31,9 +29,9 @@ export default function Nav ({name}) {
   const { toggleColorMode } = useColorMode()
   const ColorModeToggleButton = props => {
     if (colorMode === 'dark') {
-      return <SunIcon {...props} onClick={toggleColorMode} />
+      return <SunIcon cursor='pointer' {...props} onClick={toggleColorMode} />
     } else {
-      return <MoonIcon {...props} onClick={toggleColorMode} />
+      return <MoonIcon cursor='pointer' {...props} onClick={toggleColorMode} />
     }
   }
   return (

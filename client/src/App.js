@@ -10,16 +10,15 @@ import baseUrl from './baseUrl'
 
 function App () {
   const [userData, setUserData] = useState(null)
+  const [doctors, setDoctors] = useState([])
   const [loggedIn, setLoggedIn] = useState(false)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const authUser = async () => {
       setLoading(true)
-      const username = localStorage.getItem('username')
-      const password = localStorage.getItem('password')
-      const role = localStorage.getItem('role')
-      if(username && password) {
+      const userCreds = JSON.parse(localStorage.getItem('oneHealth'))
+      if(userCreds) {
         try {
           const res = await fetch(baseUrl + '/login', {
             method: 'POST',
@@ -27,16 +26,16 @@ function App () {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              username,
-              password,
-              role
+              username:userCreds.username,
+              password:userCreds.password,
+              role:userCreds.role
             }),
             credentials:'include',
           })
-          console.log(res)
           if(res.ok) {
             const jsonRes = await res.json()
             setUserData(jsonRes)
+            setDoctors(jsonRes.doctors)
             setLoggedIn(true)
           }
         } catch (error) {
@@ -74,7 +73,7 @@ function App () {
                 userData.role === 'admin' ? (
                   <AdminDashboard userData={userData} />
                 ) : (
-                  <PatientDashboard userData={userData} />
+                  <PatientDashboard doctors={doctors} userData={userData} />
                 )
               }
             />
