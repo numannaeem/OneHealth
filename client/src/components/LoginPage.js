@@ -16,14 +16,15 @@ import {
 import { SunIcon, MoonIcon } from '@chakra-ui/icons'
 import { Select } from '@chakra-ui/select'
 import { useColorMode } from '@chakra-ui/color-mode'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import baseUrl from '../baseUrl'
 
-export default function LoginPage() {
+export default function LoginPage ({setUserData}) {
   // local state
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [accType, setAccType] = useState(null)
+  const [role, setRole] = useState('patient')
 
   // colors
   const textColor = useColorModeValue('blue.700', 'blue.100')
@@ -42,8 +43,32 @@ export default function LoginPage() {
   }
 
   const navigate = useNavigate()
-  const handleSubmit = () => {
-    navigate('/dashboard')
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      const res = await fetch(baseUrl + '/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username,
+          password,
+          role
+        }),
+        credentials:'include',
+      })
+      if(res.ok) {
+        const jsonRes = await res.json()
+        localStorage.setItem('username',username)
+        localStorage.setItem('password',password)
+        localStorage.setItem('role',role)
+        setUserData(jsonRes)
+        navigate('/dashboard')
+      }
+    } catch (error) {
+      alert(error)
+    }
   }
 
   return (
@@ -56,27 +81,32 @@ export default function LoginPage() {
       <Stack spacing={7} mx='auto' maxW='lg' py={12} px={6}>
         <Stack align='center'>
           <Flex align='center' justify='center'>
-            <Heading w='fit-content' textAlign='center' color={textColor} fontSize='4xl'>
+            <Heading
+              w='fit-content'
+              textAlign='center'
+              color={textColor}
+              fontSize='4xl'
+            >
               Welcome to OneHealth
             </Heading>
-            <Image display={['none', 'block']} ml='4' height='50px' width='50px' src='OneHealth-logo.png' />
+            <Image
+              display={['none', 'block']}
+              ml='4'
+              height='50px'
+              width='50px'
+              src='OneHealth-logo.png'
+            />
           </Flex>
           <Text align='center' fontSize='lg' color='gray.500'>
             sign in to get started! <ColorModeToggleButton ml={3} />
           </Text>
-
         </Stack>
-        <Box
-          rounded='lg'
-          bg={bgColor}
-          boxShadow='lg'
-          p={8}
-        >
+        <Box rounded='lg' bg={bgColor} boxShadow='lg' p={8}>
           <Stack spacing={3}>
             <FormControl id='accountType'>
               <FormLabel>User type </FormLabel>
               <Select
-                onChange={e => setAccType(e.target.value)}
+                onChange={e => setRole(e.target.value.toLowerCase())}
                 placeholder='Select option'
               >
                 <option value='doctor'>Doctor</option>
@@ -84,11 +114,11 @@ export default function LoginPage() {
                 <option value='admin'>Admin</option>
               </Select>
             </FormControl>
-            {accType !== 'admin' && (
+            {role !== 'admin' && (
               <FormControl id='username'>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <Input
-                  type='text'
+                  type='email'
                   value={username}
                   onChange={e => setUsername(e.target.value)}
                 />
@@ -109,13 +139,21 @@ export default function LoginPage() {
                 justify='space-between'
               >
                 <Checkbox colorScheme='yellow'>Remember me</Checkbox>
-                <Link href='/register' color={textColor}>Sign up instead</Link>
+                <Link href='/register' color={textColor}>
+                  Sign up instead
+                </Link>
               </Stack>
-              <Button onClick={handleSubmit} bgColor={btnColor} colorScheme='yellow'>Sign in</Button>
+              <Button
+                onClick={handleSubmit}
+                bgColor={btnColor}
+                colorScheme='yellow'
+              >
+                Sign in
+              </Button>
             </Stack>
           </Stack>
         </Box>
-      </Stack >
-    </Flex >
+      </Stack>
+    </Flex>
   )
 }

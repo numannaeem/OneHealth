@@ -39,8 +39,13 @@ export default function SignupPage () {
 
   const handleChange = e => {
     e.preventDefault()
+		let value = e.target.value
+		if(e.target.name === 'gender') {
+			value = value.toLowerCase()
+			console.log(value)
+		}
     setFormData(p => {
-      p[e.target.name] = e.target.value
+      p[e.target.name] = value
       return { ...p }
     })
   }
@@ -49,13 +54,17 @@ export default function SignupPage () {
 		try {
 			const res = await fetch(baseUrl + '/patients/register', {
 				method: 'POST',
-				body: {
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				credentials:'include',
+				body: JSON.stringify({
 					...formData,
 					role: 'patient'
-				}
+				})
 			})
 			if(res.ok) {
-				navigate('/login')
+				navigate('/dashboard')
 			}
 		} catch(err) {
 			alert(err)
@@ -166,7 +175,6 @@ export default function SignupPage () {
                   <FormLabel>Gender</FormLabel>
                   <Select
                     onChange={handleChange}
-                    value={formData['gender']}
                     name='gender'
                   >
                     <option>Male</option>
