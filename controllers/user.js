@@ -37,5 +37,9 @@ module.exports.login = async (req, res) => {
             user = { admin, foundUser }
             return res.status(200).json(user)
             break;
+
+        default:
+            throw new ExpressError('Unauthorized', 401)
+            break;
     }
 }
