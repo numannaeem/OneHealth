@@ -7,6 +7,7 @@ const Patient = require('../models/patient');
 const Appointment = require('../models/appointment');
 const Admin = require('../models/admin');
 const Doctor = require('../models/doctor');
+const Report = require('../models/report');
 const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError');
 const { isAdmin, validateDoctor, canModifyDoctor } = require('../utils/middleware')
@@ -15,7 +16,7 @@ const { isAdmin, validateDoctor, canModifyDoctor } = require('../utils/middlewar
 
 //Routes to get all Doctors and register a doctor
 
-router.get('/', catchAsync(async (req, res) => {
+router.get('/', isAdmin, catchAsync(async (req, res) => {
     const { available } = req.query
     let doctors
     if ((available) && (available === 'true')) {
@@ -36,6 +37,7 @@ router.post('/', isAdmin, catchAsync(async (req, res) => {
     }
     const role = 'doctor'
     const appointments = []
+    const reports = []
     const foundDoctor = await User.findOne({ email })
     if (foundDoctor) {
         throw new ExpressError('User Already Exists', 403)
@@ -44,7 +46,7 @@ router.post('/', isAdmin, catchAsync(async (req, res) => {
     const user = new User({ email, role, password })
     user.username = user.email
     const regUser = await User.register(user, password)
-    const doctor = new Doctor({ available, name, specialization, qualifications, experience, DOB, appointments })
+    const doctor = new Doctor({ available, name, specialization, qualifications, experience, DOB, appointments, reports })
     doctor.user = regUser;
     doctor.appointments = appointments;
     const savedDoctor = await doctor.save();
@@ -97,6 +99,8 @@ router.delete('/:id', isAdmin, catchAsync(async (req, res) => {
     return res.status(200).json(deletedDoctor)
 }))
 
+//________________________________________________________________
+
 //Routes to get all or a specififc appointment
 
 router.get('/:id/appointments', validateDoctor, catchAsync(async (req, res) => {
@@ -125,6 +129,58 @@ router.get('/:id/appointments/:appId', validateDoctor, catchAsync(async (req, re
         }
     }
     throw new ExpressError('Appointment not found', 404)
+}))
+
+//________________________________________________________________
+
+//Routes to create and view reports
+
+router.get('/:id/reports', validateDoctor, catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const doctor = await Doctor.findById(id).populate('reports')
+    if (!doctor.reports.length) {
+        throw new ExpressError('No Reports Yet', 404)
+    }
+
+    res.status(200).json(doctor.reports)
+}))
+
+router.post('/:id/reports', validateDoctor, catchAsync(async (req, res) => {
+    const { id } = req.params
+    let flag
+    const doctor = await Doctor.findById(id).populate('appointments');
+    const { title, description, patientId } = req.body
+    if (!mongoose.Types.ObjectId.isValid(patientId)) {
+        throw new ExpressError('User not found', 404);
+    }
+
+    const patient = await Patient.findById(patientId)
+    if (!patient) {
+        throw new ExpressError('Patient not found', 404)
+    }
+
+    if (doctor.appointments.length) {
+        for (appointment of doctor.appointments) {
+            if (appointment.patient.valueOf() == patientId) {
+                flag = 1;
+                break;
+            }
+        }
+        if (flag == 1) {
+            const report = new Report({ title, description, patient, doctor })
+            patient.reports.push(report)
+            doctor.reports.push(report)
+            await patient.save();
+            await doctor.save();
+            await report.save();
+            return res.status(201).json(report)
+        }
+
+        throw new ExpressError("No appointment registered by patient", 403)
+    }
+
+    throw new ExpressError('No Appointments Yet', 404)
+
 }))
 
 module.exports = router;

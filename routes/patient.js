@@ -15,7 +15,9 @@ router.get('/', isAdmin, catchAsync(patientControllers.getAllPatients))
 //Routes to edit patient details
 
 router.route('/:id')
-    .get(catchAsync(patientControllers.getPatient))
+    .get(
+        validatePatient,
+        catchAsync(patientControllers.getPatient))
     .patch(
         validatePatient,
         catchAsync(patientControllers.editPatient)

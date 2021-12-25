@@ -19,7 +19,7 @@ module.exports.validatePatient = catchAsync(async (req, res, next) => {
         throw new ExpressError('User not found', 404);
     }
     const user = patient.user
-    if ((req.session.passport) && (req.session.passport.user === user.username)) {
+    if (((req.session.passport) && (req.session.passport.user === user.username)) || ((req.session.passport) && (req.session.passport.user === 'admin'))) {
         next()
     } else {
         throw new ExpressError('Unauthorized', 401)

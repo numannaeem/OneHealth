@@ -128,6 +128,7 @@ module.exports.register = async (req, res) => {
     const { email, password, age, name, address, gender, mobile } = req.body
     const role = 'patient'
     const appointments = []
+    const reports = []
     const foundPatient = await User.findOne({ email })
     if (foundPatient) {
         throw new ExpressError('User Already Exists', 403)
@@ -135,7 +136,7 @@ module.exports.register = async (req, res) => {
     const user = new User({ email, role, password })
     user.username = user.email
     const regUser = await User.register(user, password)
-    const patient = new Patient({ age, name, address, gender, mobile, appointments })
+    const patient = new Patient({ age, name, address, gender, mobile, appointments, reports })
     patient.user = regUser;
     patient.appointments = appointments
     const savedPatient = await patient.save()

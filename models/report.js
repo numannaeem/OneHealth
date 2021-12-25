@@ -7,7 +7,7 @@ const reportSchema = {
         required: true
     },
 
-    title: {
+    description: {
         type: String,
         required: true
     },
