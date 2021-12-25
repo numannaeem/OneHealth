@@ -58,6 +58,8 @@ router.route('/:id/reports')
         validateDoctor,
         catchAsync(doctorControllers.createReport)
     )
+    .patch()
+    .delete() //Pending
 
 //________________________________________________________________
 

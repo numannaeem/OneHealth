@@ -14,6 +14,7 @@ const Admin = require('./models/admin')
 const userRoutes = require('./routes/user');
 const patientRoutes = require('./routes/patient')
 const doctorRoutes = require('./routes/doctor')
+const ExpressError = require('./utils/ExpressError');
 
 mongoose.connect('mongodb://localhost:27017/onehealth', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
@@ -51,7 +52,14 @@ app.use('/patients', patientRoutes);
 app.use('/doctors', doctorRoutes);
 
 
-// Error Handler
+app.get('*', (req, res, next) => {
+    try {
+        throw new ExpressError('Page Not Found', 404)
+    } catch (e) {
+        next(e)
+    }
+})
+
 app.use(function (err, req, res, next) {
     const { statusCode = 500 } = err
     if (!err.message) {
