@@ -14,7 +14,7 @@ const userRoutes = require('./routes/user');
 const patientRoutes = require('./routes/patient')
 const doctorRoutes = require('./routes/doctor')
 
-mongoose.connect('mongodb://localhost:27017/onehealth', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://localhost:27017/onehealth2', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log('Connected to mongod')
     })
