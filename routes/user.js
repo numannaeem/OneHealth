@@ -10,7 +10,7 @@ router.post('/login', passport.authenticate('local'), catchAsync(async (req, res
     const { username, role } = req.body
     const user = await User.findOne({ username })
     if (user.role !== role) {
-        throw new ExpressError(`${role} not found`, 404)
+        throw new ExpressError('Unauthorized', 401)
     }
     return res.status(200).json(user)
 }))

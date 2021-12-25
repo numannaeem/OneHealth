@@ -12,6 +12,7 @@ const LocalStrategy = require('passport-local')
 const User = require('./models/user.js')
 const userRoutes = require('./routes/user');
 const patientRoutes = require('./routes/patient')
+const doctorRoutes = require('./routes/doctor')
 
 mongoose.connect('mongodb://localhost:27017/onehealth', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
@@ -46,6 +47,7 @@ app.use(express.json());
 
 app.use('/', userRoutes);
 app.use('/patients', patientRoutes);
+app.use('/doctors', doctorRoutes);
 
 // Error Handler
 app.use(function (err, req, res, next) {

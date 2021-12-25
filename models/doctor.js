@@ -35,7 +35,7 @@ const doctorSchema = new Schema({
     appointments: [
         {
             type: Schema.Types.ObjectId,
-            ref: 'Appointments'
+            ref: 'Appointment'
         }
     ]
 })

@@ -11,6 +11,7 @@ mongoose.connect('mongodb://localhost:27017/onehealth', { useNewUrlParser: true,
 const Admin = require('../models/admin')
 const Doctor = require('../models/doctor')
 const Patient = require('../models/patient')
+
 const doctors = require('./doctors')
 const patients = require('./patient')
 
@@ -22,10 +23,10 @@ async function insertPatient() {
     await Patient.insertMany(patients)
 }
 
-insertDoctor().then(() => {
-    console.log(`Inserted ${doctors.length} values`);
-    mongoose.connection.close()
-})
+// insertDoctor().then(() => {
+//     console.log(`Inserted ${doctors.length} values`);
+//     mongoose.connection.close()
+// })
 
 // insertPatient().then(() => {
 //     console.log(`Inserted ${patients.length} values`);
