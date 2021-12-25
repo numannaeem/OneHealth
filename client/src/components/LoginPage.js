@@ -22,7 +22,6 @@ import { useNavigate } from 'react-router-dom'
 export default function LoginPage() {
   // local state
   const [username, setUsername] = useState('')
-  const [submitted, setSubmitted] = useState(false)
   const [password, setPassword] = useState('')
   const [accType, setAccType] = useState(null)
 
@@ -110,7 +109,7 @@ export default function LoginPage() {
                 justify='space-between'
               >
                 <Checkbox colorScheme='yellow'>Remember me</Checkbox>
-                <Link color={textColor}>Sign up instead</Link>
+                <Link href='/register' color={textColor}>Sign up instead</Link>
               </Stack>
               <Button onClick={handleSubmit} bgColor={btnColor} colorScheme='yellow'>Sign in</Button>
             </Stack>
