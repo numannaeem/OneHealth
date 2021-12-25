@@ -5,7 +5,9 @@ const Patient = require('../models/patient');
 const Appointment = require('../models/appointment');
 const Admin = require('../models/admin');
 const Doctor = require('../models/doctor');
+const Report = require('../models/report');
 const ExpressError = require('../utils/ExpressError');
+const { report } = require('../routes/user');
 
 
 module.exports.getAllPatients = async (req, res) => {
@@ -62,6 +64,35 @@ module.exports.deletePatient = async (req, res) => {
     return res.status(200).json(deletedPatient)
 }
 
+module.exports.getReports = async (req, res) => {
+    const { id } = req.params;
+    const patient = await Patient.findById(id).populate('reports')
+    const { reports } = patient
+    if (!reports.length) {
+        throw new ExpressError('No Reports Yet', 404)
+    }
+    res.status(200).json(reports)
+}
+
+module.exports.findReport = async (req, res) => {
+    const { id, reptId } = req.params
+    if (!mongoose.Types.ObjectId.isValid(reptId)) {
+        throw new ExpressError('Report not found', 404);
+    }
+    const patient = await Patient.findById(id).populate('reports')
+    const { reports } = patient
+    if (!reports.length) {
+        throw new ExpressError('No Reports Yet', 404)
+    }
+    for (let report of reports) {
+        if (report._id.valueOf() === reptId) {
+            return res.status(200).json(report)
+        }
+    }
+
+    throw new ExpressError('Report not found', 404)
+}
+
 module.exports.getAppointments = async (req, res) => {
     const { id } = req.params;
     const appointments = await Appointment.find({ patient: id }).populate('doctor').populate('patient')
@@ -72,6 +103,7 @@ module.exports.getAppointments = async (req, res) => {
     return res.status(200).json(appointments)
 
 }
+
 
 module.exports.createAppointment = async (req, res) => {
     const { id } = req.params;

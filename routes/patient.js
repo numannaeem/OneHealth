@@ -3,7 +3,8 @@ const router = express.Router();
 
 const catchAsync = require('../utils/catchAsync');
 const patientControllers = require('../controllers/patient')
-const { validatePatient, canModifyPatient, isAdmin } = require('../utils/middleware')
+const { validatePatient, canModifyPatient, isAdmin } = require('../utils/middleware');
+const { route } = require('./user');
 //________________________________________________________________
 
 //Route to get all patients
@@ -28,7 +29,9 @@ router.route('/:id')
     )
 //________________________________________________________________
 
-//Routes show all reports and get selected reports (Create after doctor routes)
+router.get('/:id/reports', validatePatient, catchAsync(patientControllers.getReports))
+
+router.get('/:id/reports/:reptId', validatePatient, catchAsync(patientControllers.findReport))
 
 //________________________________________________________________
 

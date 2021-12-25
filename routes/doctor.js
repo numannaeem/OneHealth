@@ -116,7 +116,7 @@ router.get('/:id/appointments', validateDoctor, catchAsync(async (req, res) => {
 router.get('/:id/appointments/:appId', validateDoctor, catchAsync(async (req, res) => {
     const { id, appId } = req.params
     if (!mongoose.Types.ObjectId.isValid(appId)) {
-        throw new ExpressError('User not found', 404);
+        throw new ExpressError('Appointment not found', 404);
     }
     const doctor = await Doctor.findById(id).populate('appointments')
     const { appointments } = doctor
