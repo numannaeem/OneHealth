@@ -4,7 +4,6 @@ const router = express.Router();
 const catchAsync = require('../utils/catchAsync');
 const patientControllers = require('../controllers/patient')
 const { validatePatient, canModifyPatient, isAdmin } = require('../utils/middleware');
-const { route } = require('./user');
 //________________________________________________________________
 
 //Route to get all patients
