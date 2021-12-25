@@ -69,7 +69,3 @@ module.exports.validateDoctor = catchAsync(async (req, res, next) => {
         throw new ExpressError('Unauthorized', 401)
     }
 })
-
-module.exports.canModifyDoctor = async (req, res, next) => {
-
-}
