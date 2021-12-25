@@ -10,6 +10,10 @@ const Doctor = require('../models/doctor');
 const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError');
 
+//________________________________________________________________
+
+//Route to get all Doctors
+
 router.get('/', catchAsync(async (req, res) => {
     const doctors = await Doctor.find({}).populate('appointments')
     if (!doctors.length) {
@@ -17,4 +21,5 @@ router.get('/', catchAsync(async (req, res) => {
     }
     return res.status(200).json(doctors)
 }))
+
 module.exports = router;

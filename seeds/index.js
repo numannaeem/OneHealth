@@ -11,6 +11,7 @@ mongoose.connect('mongodb://localhost:27017/onehealth', { useNewUrlParser: true,
 const Admin = require('../models/admin')
 const Doctor = require('../models/doctor')
 const Patient = require('../models/patient')
+const User = require('../models/user')
 
 const doctors = require('./doctors')
 const patients = require('./patient')
