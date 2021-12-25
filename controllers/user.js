@@ -2,6 +2,8 @@ const User = require('../models/user');
 const Patient = require('../models/patient')
 const Doctor = require('../models/doctor')
 const Admin = require('../models/admin');
+const Appointment = require('../models/appointment')
+const Report = require('../models/report')
 const ExpressError = require('../utils/ExpressError');
 
 module.exports.login = async (req, res) => {
@@ -42,4 +44,28 @@ module.exports.login = async (req, res) => {
             throw new ExpressError('Unauthorized', 401)
             break;
     }
+}
+
+module.exports.getAllAppointments = async (req, res) => {
+    const appointments = await Appointment.find({}).populate('doctor').populate('patient')
+    if (!appointments.length) {
+        throw new ExpressError('No Appointments Found', 404)
+    }
+    res.status(200).json(appointments)
+}
+
+module.exports.getAllReports = async (req, res) => {
+    const reports = await Report.find({}).populate('doctor').populate('patient')
+    if (!reports.length) {
+        throw new ExpressError('No Reports Found', 404)
+    }
+    res.status(200).json(reports)
+}
+
+module.exports.getAllUsers = async (req, res) => {
+    const users = await User.find({})
+    if (!users.length) {
+        throw new ExpressError('No Users Found', 404)
+    }
+    res.status(200).json(users)
 }
