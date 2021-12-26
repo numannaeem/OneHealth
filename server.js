@@ -9,6 +9,7 @@ const session = require('express-session')
 const passport = require('passport')
 const cors = require('cors')
 const LocalStrategy = require('passport-local')
+const path = require('path')
 
 const User = require('./models/user.js')
 const Admin = require('./models/admin')
@@ -28,14 +29,11 @@ mongoose.connect('mongodb://localhost:27017/onehealth', { useNewUrlParser: true,
 const sessionConfig = {
     name: 'session',
     secret: 'numDB',
-    resave: false,
+    resave: true,
     saveUninitialized: true,
-    cookie: {
-        httpOnly: true,
-        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-        maxAge: 1000 * 60 * 60 * 24 * 7
-    }
 }
+
+app.use(express.static(path.resolve(__dirname,"./client/build")));
 
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
 app.use(session(sessionConfig))
@@ -49,18 +47,13 @@ passport.deserializeUser(User.deserializeUser())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 
-app.use('/', userRoutes);
-app.use('/patients', patientRoutes);
-app.use('/doctors', doctorRoutes);
+app.use('/api', userRoutes);
+app.use('/api/patients', patientRoutes);
+app.use('/api/doctors', doctorRoutes);
 
-
-app.get('*', (req, res, next) => {
-    try {
-        throw new ExpressError('Page Not Found', 404)
-    } catch (e) {
-        next(e)
-    }
-})
+app.use((req, res, next) => {
+    res.sendFile(path.resolve(__dirname, "./client/build","index.html"));
+});  
 
 app.use(function (err, req, res, next) {
     const { statusCode = 500 } = err

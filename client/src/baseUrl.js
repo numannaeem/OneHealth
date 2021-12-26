@@ -1,2 +1,2 @@
-const baseUrl = process.env.NODE_ENV !== 'prodution' ? 'http://localhost:5000' : ''
+const baseUrl = process.env.NODE_ENV !== 'production' ? 'http://localhost:8080/api' : ''
 export default baseUrl
