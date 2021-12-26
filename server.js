@@ -37,7 +37,7 @@ const sessionConfig = {
     }
 }
 
-app.use(cors({credentials: true, origin: 'http://localhost:3000'}))
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
 app.use(session(sessionConfig))
 app.use(passport.initialize())
 app.use(passport.session())
@@ -70,6 +70,6 @@ app.use(function (err, req, res, next) {
     res.status(statusCode).json(err)
 });
 
-app.listen(5000, () => {
-    console.log('Hosted on port 5000')
-})
+app.listen(8080, () => {
+    console.log('Hosted on port 8080')
+})  

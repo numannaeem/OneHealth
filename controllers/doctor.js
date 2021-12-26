@@ -23,9 +23,6 @@ module.exports.getAllDoctors = async (req, res) => {
 
 module.exports.createDoctor = async (req, res) => {
     const { email, password, name, specialization, available, qualifications, experience, DOB } = req.body
-    if (isNaN(Date.parse(DOB))) {
-        throw new ExpressError('Invalid Date', 403)
-    }
     const role = 'doctor'
     const appointments = []
     const reports = []

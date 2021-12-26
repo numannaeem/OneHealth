@@ -5,7 +5,6 @@ const Admin = require('../models/admin');
 const Appointment = require('../models/appointment')
 const Report = require('../models/report')
 const ExpressError = require('../utils/ExpressError');
-const doctors = require('../seeds/doctors');
 
 module.exports.login = async (req, res) => {
     const { username, role } = req.body
@@ -21,6 +20,9 @@ module.exports.login = async (req, res) => {
                 throw new ExpressError('Unauthorized', 401)
             }
             const doctors = await Doctor.find()
+            if (!doctors.length) {
+                throw new ExpressError('Doctor not found', 404)
+            }
             user = { ...patient._doc, role, username, doctors }
             return res.status(200).json(user)
             break;

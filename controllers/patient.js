@@ -108,9 +108,7 @@ module.exports.getAppointments = async (req, res) => {
 module.exports.createAppointment = async (req, res) => {
     const { id } = req.params;
     const { datetime, description, doctorId } = req.body
-    if (isNaN(Date.parse(datetime))) {
-        throw new ExpressError('Invalid Date', 403)
-    }
+
     const patient = await Patient.findById(id);
     if (!mongoose.Types.ObjectId.isValid(doctorId)) {
         throw new ExpressError('Doctor not found', 404);
@@ -133,9 +131,7 @@ module.exports.createAppointment = async (req, res) => {
 module.exports.editAppointment = async (req, res) => {
     const { appId } = req.params;
     const { datetime, description, doctorId } = req.body
-    if (isNaN(Date.parse(datetime))) {
-        throw new ExpressError('Invalid Date', 403)
-    }
+
     const doctor = await Doctor.findById(doctorId);
     if (!doctor) {
         throw new ExpressError('User not found', 404)
