@@ -28,7 +28,7 @@ const doctorSchema = new Schema({
     experience: Number,
 
     DOB: {
-        type: Date,
+        type: String,
         required: true
     },
 
@@ -36,6 +36,13 @@ const doctorSchema = new Schema({
         {
             type: Schema.Types.ObjectId,
             ref: 'Appointment'
+        }
+    ],
+
+    reports: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Report'
         }
     ]
 })

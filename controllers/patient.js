@@ -5,9 +5,21 @@ const Patient = require('../models/patient');
 const Appointment = require('../models/appointment');
 const Admin = require('../models/admin');
 const Doctor = require('../models/doctor');
+const Report = require('../models/report');
 const ExpressError = require('../utils/ExpressError');
+const { report } = require('../routes/user');
 
-module.exports.getPatients = async (req, res) => {
+
+module.exports.getAllPatients = async (req, res) => {
+    const patients = await Patient.find({}).populate('user').populate('appointments');
+    if (!patients.length) {
+        throw new ExpressError('Patients not found', 404)
+    }
+
+    return res.status(200).json(patients)
+}
+
+module.exports.getPatient = async (req, res) => {
     const { id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
         throw new ExpressError('User not found', 404);
@@ -52,6 +64,35 @@ module.exports.deletePatient = async (req, res) => {
     return res.status(200).json(deletedPatient)
 }
 
+module.exports.getReports = async (req, res) => {
+    const { id } = req.params;
+    const patient = await Patient.findById(id).populate('reports')
+    const { reports } = patient
+    if (!reports.length) {
+        throw new ExpressError('No Reports Yet', 404)
+    }
+    res.status(200).json(reports)
+}
+
+module.exports.findReport = async (req, res) => {
+    const { id, reptId } = req.params
+    if (!mongoose.Types.ObjectId.isValid(reptId)) {
+        throw new ExpressError('Report not found', 404);
+    }
+    const patient = await Patient.findById(id).populate('reports')
+    const { reports } = patient
+    if (!reports.length) {
+        throw new ExpressError('No Reports Yet', 404)
+    }
+    for (let report of reports) {
+        if (report._id.valueOf() === reptId) {
+            return res.status(200).json(report)
+        }
+    }
+
+    throw new ExpressError('Report not found', 404)
+}
+
 module.exports.getAppointments = async (req, res) => {
     const { id } = req.params;
     const appointments = await Appointment.find({ patient: id }).populate('doctor').populate('patient')
@@ -62,6 +103,7 @@ module.exports.getAppointments = async (req, res) => {
     return res.status(200).json(appointments)
 
 }
+
 
 module.exports.createAppointment = async (req, res) => {
     const { id } = req.params;
@@ -115,16 +157,18 @@ module.exports.deleteAppointment = async (req, res) => {
 }
 
 module.exports.register = async (req, res) => {
-    const { email, role, password, age, name, address, gender, mobile } = req.body
-    const foundPatient = await User.findOne({ email })
+    const { email, password, age, name, address, gender, mobile } = req.body
+    const role = 'patient'
     const appointments = []
+    const reports = []
+    const foundPatient = await User.findOne({ email })
     if (foundPatient) {
         throw new ExpressError('User Already Exists', 403)
     }
     const user = new User({ email, role, password })
     user.username = user.email
     const regUser = await User.register(user, password)
-    const patient = new Patient({ age, name, address, gender, mobile, appointments })
+    const patient = new Patient({ age, name, address, gender, mobile, appointments, reports })
     patient.user = regUser;
     patient.appointments = appointments
     const savedPatient = await patient.save()
