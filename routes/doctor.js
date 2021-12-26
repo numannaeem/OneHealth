@@ -11,7 +11,7 @@ const doctorControllers = require('../controllers/doctor')
 
 router.route('/')
     .get(
-        isAdmin,
+        // isAdmin,
         catchAsync(doctorControllers.getAllDoctors)
     )
     .post(
