@@ -1,34 +1,21 @@
 import React from 'react'
 import { SimpleGrid, Text, Flex } from '@chakra-ui/react'
 import { PageContainer, PageContent, Nav, Footer, Card } from './Layout'
+import { useNavigate } from 'react-router-dom'
 
-export default function Dashboard () {
+export default function AdminDashboard ({userData}) {
+
+  const navigate = useNavigate()
+  console.log(userData)
+  if(!userData)
+      navigate('/login')
+
   return (
     <PageContainer isFixedNav>
-      <Nav />
+      <Nav name={userData.email} />
       <PageContent
         title='Dashboard'
         subtitle='Logged in as admin'
-        // primaryAction={{
-        //   content: "Create report",
-        //   onClick: () => {
-        //     alert("ok");
-        //   }
-        // }}
-        // secondaryActions={[
-        //   {
-        //     content: "Second action",
-        //     onClick: () => {
-        //       alert("ok");
-        //     }
-        //   },
-        //   {
-        //     content: "Third action",
-        //     onClick: () => {
-        //       alert("ok");
-        //     }
-        //   }
-        // ]}
       >
         <SimpleGrid columns={{ sm: 1, md: 2 }} spacing={10}>
           <Card

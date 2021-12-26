@@ -1,4 +1,4 @@
-if (!process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 
@@ -7,6 +7,7 @@ const app = express()
 const mongoose = require('mongoose')
 const session = require('express-session')
 const passport = require('passport')
+const cors = require('cors')
 const LocalStrategy = require('passport-local')
 
 const User = require('./models/user.js')
@@ -36,6 +37,7 @@ const sessionConfig = {
     }
 }
 
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}))
 app.use(session(sessionConfig))
 app.use(passport.initialize())
 app.use(passport.session())
@@ -68,6 +70,6 @@ app.use(function (err, req, res, next) {
     res.status(statusCode).json(err)
 });
 
-app.listen(3000, () => {
-    console.log('Hosted on port 3000')
+app.listen(5000, () => {
+    console.log('Hosted on port 5000')
 })

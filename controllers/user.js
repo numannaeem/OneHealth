@@ -5,6 +5,7 @@ const Admin = require('../models/admin');
 const Appointment = require('../models/appointment')
 const Report = require('../models/report')
 const ExpressError = require('../utils/ExpressError');
+const doctors = require('../seeds/doctors');
 
 module.exports.login = async (req, res) => {
     const { username, role } = req.body
@@ -12,7 +13,6 @@ module.exports.login = async (req, res) => {
     if (foundUser.role !== role) {
         throw new ExpressError('Unauthorized', 401)
     }
-
     let user
     switch (role) {
         case 'patient':
@@ -20,7 +20,8 @@ module.exports.login = async (req, res) => {
             if (!patient) {
                 throw new ExpressError('Unauthorized', 401)
             }
-            user = { patient, foundUser }
+            const doctors = await Doctor.find()
+            user = { ...patient._doc, role, username, doctors }
             return res.status(200).json(user)
             break;
         case 'doctor':
@@ -28,7 +29,7 @@ module.exports.login = async (req, res) => {
             if (!doctor) {
                 throw new ExpressError('Unauthorized', 401)
             }
-            user = { doctor, foundUser }
+            user = { ...doctor._doc, role, username }
             return res.status(200).json(user)
             break;
         case 'admin':
@@ -36,7 +37,7 @@ module.exports.login = async (req, res) => {
             if (!admin) {
                 throw new ExpressError('Unauthorized', 401)
             }
-            user = { admin, foundUser }
+            user = { ...admin._doc, role, username }
             return res.status(200).json(user)
             break;
 

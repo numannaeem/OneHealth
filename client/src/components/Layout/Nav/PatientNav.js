@@ -20,8 +20,9 @@ import { FaChevronDown, FaUserCircle } from 'react-icons/fa'
 
 import './Nav.scss'
 import { MoonIcon, SunIcon } from '@chakra-ui/icons'
+import { useNavigate } from 'react-router-dom'
 
-export default function Nav ({name}) {
+export default function PatientNav ({name}) {
   // colors
   const bgColor = useColorModeValue('white', 'gray.800')
 
@@ -34,6 +35,14 @@ export default function Nav ({name}) {
       return <MoonIcon cursor='pointer' {...props} onClick={toggleColorMode} />
     }
   }
+
+  const signOut = () => {
+    localStorage.removeItem('oneHealth')
+    window.location.reload()
+  }
+
+	const navigate = useNavigate()
+
   return (
     <Flex
       position={{ md: 'fixed' }}
@@ -46,9 +55,9 @@ export default function Nav ({name}) {
       <Container maxW='container.lg' paddingTop='5px'>
         <Stack
           direction={['column', 'row']}
-          alignItems={['flex-end', 'center']}
+          alignItems='center'
         >
-          <Flex align='center' mr={2}>
+          <Flex cursor='pointer' align='center' mr={2} onClick={() => navigate('/')}>
             <Image
               my='1'
               mr='3'
@@ -60,9 +69,6 @@ export default function Nav ({name}) {
             </Text>
           </Flex>
           <Stack direction={['column', 'row']}>
-            <Button colorScheme='navItem' variant='ghost'>
-              Appointments
-            </Button>
             <Menu>
               <MenuButton
                 as={Button}
@@ -70,17 +76,17 @@ export default function Nav ({name}) {
                 variant='ghost'
                 rightIcon={<Icon as={FaChevronDown} color='navItem.500' />}
               >
-                Users
+                Appointments
               </MenuButton>
               <MenuList>
-                <MenuGroup title='Add/Edit Users'>
-                  <MenuItem>Doctors</MenuItem>
-                  <MenuItem>Patients</MenuItem>
+                <MenuGroup title='Manage Appointments'>
+                  <MenuItem onClick={() => navigate('/dashboard/new-appointment')}>New Appointment</MenuItem>
+                  <MenuItem onClick={() => navigate('/dashboard/appointments')}>View Appointments</MenuItem>
                 </MenuGroup>
               </MenuList>
             </Menu>
           </Stack>
-          <Stack align='center' direction={['column', 'row']} style={{ marginLeft: 'auto' }}>
+          <Stack align='center' direction={['column', 'row']} style={{marginLeft:'auto'}}>
             <ColorModeToggleButton mr='2' />
             <Menu>
               <MenuButton
@@ -94,7 +100,7 @@ export default function Nav ({name}) {
               <MenuList>
                 <MenuGroup title='Profile'>
                   <MenuItem>My Account</MenuItem>
-                  <MenuItem>Sign Out </MenuItem>
+                  <MenuItem onClick={signOut} >Sign Out </MenuItem>
                 </MenuGroup>
               </MenuList>
             </Menu>
