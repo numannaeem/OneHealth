@@ -3,13 +3,21 @@ const router = express.Router();
 
 const catchAsync = require('../utils/catchAsync');
 const patientControllers = require('../controllers/patient')
-const { validatePatient, canModify } = require('../utils/middleware')
+const { validatePatient, canModifyPatient, isAdmin } = require('../utils/middleware');
+//________________________________________________________________
+
+//Route to get all patients
+
+router.get('/', isAdmin, catchAsync(patientControllers.getAllPatients))
+
 //________________________________________________________________
 
 //Routes to edit patient details
 
 router.route('/:id')
-    .get(catchAsync(patientControllers.getPatients))
+    .get(
+        validatePatient,
+        catchAsync(patientControllers.getPatient))
     .patch(
         validatePatient,
         catchAsync(patientControllers.editPatient)
@@ -20,7 +28,9 @@ router.route('/:id')
     )
 //________________________________________________________________
 
-//Routes show all reports and get selected reports (Create after doctor routes)
+router.get('/:id/reports', validatePatient, catchAsync(patientControllers.getReports))
+
+router.get('/:id/reports/:reptId', validatePatient, catchAsync(patientControllers.findReport))
 
 //________________________________________________________________
 
@@ -40,13 +50,13 @@ router.route('/:id/appointments')
 router.route('/:id/appointments/:appId')
     .patch(
         validatePatient,
-        canModify,
+        canModifyPatient,
         catchAsync(patientControllers.editAppointment)
     )
 
     .delete(
         validatePatient,
-        canModify,
+        canModifyPatient,
         catchAsync(patientControllers.deleteAppointment)
     )
 //________________________________________________________________

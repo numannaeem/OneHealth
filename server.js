@@ -55,7 +55,6 @@ app.use((req, res, next) => {
     res.sendFile(path.resolve(__dirname, "./client/build","index.html"));
 });  
 
-
 app.use(function (err, req, res, next) {
     const { statusCode = 500 } = err
     if (!err.message) {

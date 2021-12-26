@@ -1,25 +1,66 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
 
-const User = require('../models/user');
-const Patient = require('../models/patient');
-const Appointment = require('../models/appointment');
-const Admin = require('../models/admin');
-const Doctor = require('../models/doctor');
 const catchAsync = require('../utils/catchAsync');
-const ExpressError = require('../utils/ExpressError');
+const { isAdmin, validateDoctor } = require('../utils/middleware')
+const doctorControllers = require('../controllers/doctor')
 
 //________________________________________________________________
 
-//Route to get all Doctors
+//Routes to get all Doctors and register a doctor
 
-router.get('/', catchAsync(async (req, res) => {
-    const doctors = await Doctor.find({}).populate('appointments')
-    if (!doctors.length) {
-        throw new ExpressError('No Doctors Found', 404)
-    }
-    return res.status(200).json(doctors)
-}))
+router.route('/')
+    .get(
+        isAdmin,
+        catchAsync(doctorControllers.getAllDoctors)
+    )
+    .post(
+        isAdmin,
+        catchAsync(doctorControllers.createDoctor)
+    )
+
+//________________________________________________________________
+
+//Routes to modify and delete doctors
+
+router.route('/:id')
+    .get(
+        validateDoctor,
+        catchAsync(doctorControllers.findDoctor)
+    )
+    .patch(
+        validateDoctor,
+        catchAsync(doctorControllers.editDoctor)
+    )
+    .delete(
+        isAdmin,
+        catchAsync(doctorControllers.deleteDoctor)
+    )
+
+//________________________________________________________________
+
+//Routes to get all or a specififc appointment
+
+router.get('/:id/appointments', validateDoctor, catchAsync(doctorControllers.getAppointments))
+
+router.get('/:id/appointments/:appId', validateDoctor, catchAsync(doctorControllers.findAppointment))
+
+//________________________________________________________________
+
+//Routes to create and view reports
+
+router.route('/:id/reports')
+    .get(
+        validateDoctor,
+        catchAsync(doctorControllers.getReports)
+    )
+    .post(
+        validateDoctor,
+        catchAsync(doctorControllers.createReport)
+    )
+    .patch()
+    .delete() //Pending
+
+//________________________________________________________________
 
 module.exports = router;
