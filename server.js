@@ -9,12 +9,14 @@ const session = require('express-session')
 const passport = require('passport')
 const cors = require('cors')
 const LocalStrategy = require('passport-local')
+const path = require('path')
 
 const User = require('./models/user.js')
 const Admin = require('./models/admin')
 const userRoutes = require('./routes/user');
 const patientRoutes = require('./routes/patient')
 const doctorRoutes = require('./routes/doctor')
+const ExpressError = require('./utils/ExpressError');
 
 mongoose.connect('mongodb://localhost:27017/onehealth', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
@@ -27,16 +29,13 @@ mongoose.connect('mongodb://localhost:27017/onehealth', { useNewUrlParser: true,
 const sessionConfig = {
     name: 'session',
     secret: 'numDB',
-    resave: false,
+    resave: true,
     saveUninitialized: true,
-    cookie: {
-        httpOnly: true,
-        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-        maxAge: 1000 * 60 * 60 * 24 * 7
-    }
 }
 
-app.use(cors({credentials: true, origin: 'http://localhost:3000'}))
+app.use(express.static(path.resolve(__dirname,"./client/build")));
+
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
 app.use(session(sessionConfig))
 app.use(passport.initialize())
 app.use(passport.session())
@@ -48,12 +47,15 @@ passport.deserializeUser(User.deserializeUser())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 
-app.use('/', userRoutes);
-app.use('/patients', patientRoutes);
-app.use('/doctors', doctorRoutes);
+app.use('/api', userRoutes);
+app.use('/api/patients', patientRoutes);
+app.use('/api/doctors', doctorRoutes);
+
+app.use((req, res, next) => {
+    res.sendFile(path.resolve(__dirname, "./client/build","index.html"));
+});  
 
 
-// Error Handler
 app.use(function (err, req, res, next) {
     const { statusCode = 500 } = err
     if (!err.message) {
@@ -62,6 +64,6 @@ app.use(function (err, req, res, next) {
     res.status(statusCode).json(err)
 });
 
-app.listen(5000, () => {
-    console.log('Hosted on port 5000')
-})
+app.listen(8080, () => {
+    console.log('Hosted on port 8080')
+})  

@@ -13,27 +13,45 @@ import {
   MenuList,
   MenuButton,
   useColorMode,
-  useColorModeValue
+  useColorModeValue,
+  Tooltip
 } from '@chakra-ui/react'
 
 import { FaChevronDown, FaUserCircle } from 'react-icons/fa'
 
 import './Nav.scss'
 import { MoonIcon, SunIcon } from '@chakra-ui/icons'
+import { useNavigate } from 'react-router-dom'
 
-export default function Nav ({name}) {
+export default function AdminNav ({ name }) {
   // colors
   const bgColor = useColorModeValue('white', 'gray.800')
 
   const colorMode = window.localStorage.getItem('chakra-ui-color-mode')
+  const navigate = useNavigate()
+
   const { toggleColorMode } = useColorMode()
   const ColorModeToggleButton = props => {
     if (colorMode === 'dark') {
-      return <SunIcon cursor='pointer' {...props} onClick={toggleColorMode} />
+      return (
+        <Tooltip label='Toggle theme'>
+          <SunIcon cursor='pointer' {...props} onClick={toggleColorMode} />
+        </Tooltip>
+      )
     } else {
-      return <MoonIcon cursor='pointer' {...props} onClick={toggleColorMode} />
+      return (
+        <Tooltip label='Toggle theme'>
+          <MoonIcon cursor='pointer' {...props} onClick={toggleColorMode} />
+        </Tooltip>
+      )
     }
   }
+
+  const signOut = () => {
+    localStorage.removeItem('oneHealth')
+    window.location.replace('/login')
+  }
+
   return (
     <Flex
       position={{ md: 'fixed' }}
@@ -46,22 +64,17 @@ export default function Nav ({name}) {
       <Container maxW='container.lg' paddingTop='5px'>
         <Stack
           direction={['column', 'row']}
-          alignItems={['flex-end', 'center']}
+          alignItems='center'
         >
           <Flex align='center' mr={2}>
-            <Image
-              my='1'
-              mr='3'
-              boxSize='46px'
-              src='OneHealth-logo.png'
-            />
+            <Image my='1' mr='3' boxSize='46px' src='OneHealth-logo.png' />
             <Text fontSize='xl' fontWeight='500'>
               OneHealth
             </Text>
           </Flex>
           <Stack direction={['column', 'row']}>
-            <Button colorScheme='navItem' variant='ghost'>
-              Appointments
+            <Button onClick={() => navigate('/dashboard/add-doctor')} colorScheme='navItem' variant='ghost'>
+              Add Doctor
             </Button>
             <Menu>
               <MenuButton
@@ -73,28 +86,34 @@ export default function Nav ({name}) {
                 Users
               </MenuButton>
               <MenuList>
-                <MenuGroup title='Add/Edit Users'>
+                <MenuGroup title='View Users'>
                   <MenuItem>Doctors</MenuItem>
                   <MenuItem>Patients</MenuItem>
                 </MenuGroup>
               </MenuList>
             </Menu>
           </Stack>
-          <Stack align='center' direction={['column', 'row']} style={{ marginLeft: 'auto' }}>
+          <Stack
+            align='center'
+            direction={['column', 'row']}
+            ml={{ sm: 'auto !important' }}
+          >
             <ColorModeToggleButton mr='2' />
             <Menu>
               <MenuButton
                 as={Button}
                 colorScheme='navItem'
                 variant='ghost'
-                rightIcon={<Icon as={FaUserCircle} size='lg' color='navItem.500' />}
+                rightIcon={
+                  <Icon as={FaUserCircle} size='lg' color='navItem.500' />
+                }
               >
                 {name || 'Account'}
               </MenuButton>
               <MenuList>
                 <MenuGroup title='Profile'>
-                  <MenuItem>My Account</MenuItem>
-                  <MenuItem>Sign Out </MenuItem>
+                  {/* <MenuItem>My Account</MenuItem> */}
+                  <MenuItem onClick={signOut}>Sign Out </MenuItem>
                 </MenuGroup>
               </MenuList>
             </Menu>

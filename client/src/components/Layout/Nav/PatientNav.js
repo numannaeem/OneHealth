@@ -13,7 +13,8 @@ import {
   MenuList,
   MenuButton,
   useColorMode,
-  useColorModeValue
+  useColorModeValue,
+  Tooltip
 } from '@chakra-ui/react'
 
 import { FaChevronDown, FaUserCircle } from 'react-icons/fa'
@@ -22,7 +23,7 @@ import './Nav.scss'
 import { MoonIcon, SunIcon } from '@chakra-ui/icons'
 import { useNavigate } from 'react-router-dom'
 
-export default function PatientNav ({name}) {
+export default function PatientNav ({ name }) {
   // colors
   const bgColor = useColorModeValue('white', 'gray.800')
 
@@ -30,21 +31,30 @@ export default function PatientNav ({name}) {
   const { toggleColorMode } = useColorMode()
   const ColorModeToggleButton = props => {
     if (colorMode === 'dark') {
-      return <SunIcon cursor='pointer' {...props} onClick={toggleColorMode} />
+      return (
+        <Tooltip label='Toggle theme'>
+          <SunIcon cursor='pointer' {...props} onClick={toggleColorMode} />
+        </Tooltip>
+      )
     } else {
-      return <MoonIcon cursor='pointer' {...props} onClick={toggleColorMode} />
+      return (
+        <Tooltip label='Toggle theme'>
+          <MoonIcon cursor='pointer' {...props} onClick={toggleColorMode} />
+        </Tooltip>
+      )
     }
   }
 
   const signOut = () => {
     localStorage.removeItem('oneHealth')
-    window.location.reload()
+    window.location.replace('/login')
   }
 
-	const navigate = useNavigate()
+  const navigate = useNavigate()
 
   return (
     <Flex
+      userSelect='none'
       position={{ md: 'fixed' }}
       bg={bgColor}
       minH='4rem'
@@ -53,17 +63,14 @@ export default function PatientNav ({name}) {
       zIndex='99'
     >
       <Container maxW='container.lg' paddingTop='5px'>
-        <Stack
-          direction={['column', 'row']}
-          alignItems='center'
-        >
-          <Flex cursor='pointer' align='center' mr={2} onClick={() => navigate('/')}>
-            <Image
-              my='1'
-              mr='3'
-              boxSize='46px'
-              src='OneHealth-logo.png'
-            />
+        <Stack direction={['column', 'row']} alignItems='center'>
+          <Flex
+            cursor='pointer'
+            align='center'
+            mr={2}
+            onClick={() => navigate('/')}
+          >
+            <Image my='1' mr='3' boxSize='46px' src='OneHealth-logo.png' />
             <Text fontSize='xl' fontWeight='500'>
               OneHealth
             </Text>
@@ -80,27 +87,39 @@ export default function PatientNav ({name}) {
               </MenuButton>
               <MenuList>
                 <MenuGroup title='Manage Appointments'>
-                  <MenuItem onClick={() => navigate('/dashboard/new-appointment')}>New Appointment</MenuItem>
-                  <MenuItem onClick={() => navigate('/dashboard/appointments')}>View Appointments</MenuItem>
+                  <MenuItem
+                    onClick={() => navigate('/dashboard/new-appointment')}
+                  >
+                    New Appointment
+                  </MenuItem>
+                  <MenuItem onClick={() => navigate('/dashboard/appointments')}>
+                    View Appointments
+                  </MenuItem>
                 </MenuGroup>
               </MenuList>
             </Menu>
           </Stack>
-          <Stack align='center' direction={['column', 'row']} style={{marginLeft:'auto'}}>
+          <Stack
+            ml={{ sm: 'auto !important' }}
+            align='center'
+            direction={['column', 'row']}
+          >
             <ColorModeToggleButton mr='2' />
             <Menu>
               <MenuButton
                 as={Button}
                 colorScheme='navItem'
                 variant='ghost'
-                rightIcon={<Icon as={FaUserCircle} size='lg' color='navItem.500' />}
+                rightIcon={
+                  <Icon as={FaUserCircle} size='lg' color='navItem.500' />
+                }
               >
                 {name || 'Account'}
               </MenuButton>
               <MenuList>
                 <MenuGroup title='Profile'>
-                  <MenuItem>My Account</MenuItem>
-                  <MenuItem onClick={signOut} >Sign Out </MenuItem>
+                  {/* <MenuItem>My Account</MenuItem> */}
+                  <MenuItem onClick={signOut}>Sign Out </MenuItem>
                 </MenuGroup>
               </MenuList>
             </Menu>

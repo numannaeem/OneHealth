@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container, Stack, Link, Text, Icon } from '@chakra-ui/react'
-import { FaGithub, FaTwitter } from 'react-icons/fa'
+import { FaGithub } from 'react-icons/fa'
 
 import './Footer.scss'
 

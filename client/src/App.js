@@ -2,7 +2,7 @@ import LoginPage from './components/LoginPage'
 import { ChakraProvider, Spinner, Flex } from '@chakra-ui/react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import theme from './theme'
-import AdminDashboard from './components/AdminDashboard'
+import AdminDashboard from './components/AdminPages/AdminDashboard'
 import SignupPage from './components/SingupPage'
 import { useEffect, useState } from 'react'
 import PatientDashboard from './components/PatientPages/PatientDashboard'
@@ -18,7 +18,7 @@ function App () {
     const authUser = async () => {
       setLoading(true)
       const userCreds = JSON.parse(localStorage.getItem('oneHealth'))
-      if(userCreds) {
+      if (userCreds) {
         try {
           const res = await fetch(baseUrl + '/login', {
             method: 'POST',
@@ -26,13 +26,13 @@ function App () {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              username:userCreds.username,
-              password:userCreds.password,
-              role:userCreds.role
+              username: userCreds.username,
+              password: userCreds.password,
+              role: userCreds.role
             }),
-            credentials:'include',
+            credentials: 'include'
           })
-          if(res.ok) {
+          if (res.ok) {
             const jsonRes = await res.json()
             setUserData(jsonRes)
             setDoctors(jsonRes.doctors)
@@ -47,38 +47,55 @@ function App () {
     authUser()
   }, [])
 
-  if(loading)
+  if (loading) {
     return (
-    <ChakraProvider theme={theme}>
-      <Flex minH='100vh' justify='center' align='center'>
-        <Spinner size={'xl'} />
-      </Flex>
-</ChakraProvider>
+      <ChakraProvider theme={theme}>
+        <Flex minH='100vh' justify='center' align='center'>
+          <Spinner size='xl' />
+        </Flex>
+      </ChakraProvider>
     )
+  }
 
   return (
     <ChakraProvider theme={theme}>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={loggedIn ? <Navigate to='/dashboard' /> : <Navigate to='/login' />} />
-          {!loggedIn && <Route
-            path='/login'
-            element={<LoginPage setUserData={setUserData} />}
-          />}
-          <Route path='/register' element={<SignupPage />} />
-          {userData && (
+          {!loggedIn && (
+            <>
+              <Route
+                path='/login'
+                element={<LoginPage setUserData={setUserData} />}
+              />
+              <Route path='/register' element={<SignupPage />} />
+            </>
+          )}
+          {loggedIn && (
             <Route
               path='/dashboard/*'
               element={
-                userData.role === 'admin' ? (
-                  <AdminDashboard userData={userData} />
-                ) : (
-                  <PatientDashboard doctors={doctors} userData={userData} />
-                )
+                userData.role === 'admin'
+                  ? (
+                    <AdminDashboard userData={userData} />
+                    )
+                  : (
+                    <PatientDashboard doctors={doctors} userData={userData} />
+                    )
               }
             />
           )}
-          <Route path='/:anythingElse' element={loggedIn ? <Navigate to={'/dashboard'} /> : <Navigate to={'/login'} />} />
+          <Route
+            path='*'
+            element={
+              loggedIn
+                ? (
+                  <Navigate to='/dashboard' />
+                  )
+                : (
+                  <Navigate to='/login' />
+                  )
+            }
+          />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>

@@ -15,11 +15,10 @@ import {
 import { SunIcon, MoonIcon } from '@chakra-ui/icons'
 import { Select } from '@chakra-ui/select'
 import { useColorMode } from '@chakra-ui/color-mode'
-import {  useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 import baseUrl from '../baseUrl'
 
-export default function LoginPage ({setUserData}) {
+export default function LoginPage ({ setUserData }) {
   // local state
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -41,7 +40,6 @@ export default function LoginPage ({setUserData}) {
     }
   }
 
-  const navigate = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
@@ -55,13 +53,13 @@ export default function LoginPage ({setUserData}) {
           password,
           role
         }),
-        credentials:'include',
+        credentials: 'include'
       })
-      if(res.ok) {
+      if (res.ok) {
         const jsonRes = await res.json()
-        localStorage.setItem('oneHealth',JSON.stringify({username, password, role}))
+        localStorage.setItem('oneHealth', JSON.stringify({ username, password, role }))
         setUserData(jsonRes)
-        navigate('/dashboard')
+        window.location.replace('/dashboard')
       }
     } catch (error) {
       alert(error)
@@ -105,22 +103,20 @@ export default function LoginPage ({setUserData}) {
               <Select
                 onChange={e => setRole(e.target.value.toLowerCase())}
               >
-                <option disabled >Select one</option>
+                <option disabled>Select one</option>
                 <option value='doctor'>Doctor</option>
                 <option selected value='patient'>Patient</option>
                 <option value='admin'>Admin</option>
               </Select>
             </FormControl>
-            {role !== 'admin' && (
-              <FormControl id='username'>
-                <FormLabel>Email</FormLabel>
-                <Input
-                  type='email'
-                  value={username}
-                  onChange={e => setUsername(e.target.value)}
-                />
-              </FormControl>
-            )}
+            <FormControl id='username'>
+              <FormLabel>Email</FormLabel>
+              <Input
+                type='email'
+                value={username}
+                onChange={e => setUsername(e.target.value)}
+              />
+            </FormControl>
             <FormControl id='password'>
               <FormLabel>Password</FormLabel>
               <Input

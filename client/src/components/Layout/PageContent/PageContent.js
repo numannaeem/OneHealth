@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Stack, Heading, Button, useColorModeValue } from '@chakra-ui/react'
+import { Container, Stack, Heading, Button } from '@chakra-ui/react'
 
 import './PageContent.scss'
 

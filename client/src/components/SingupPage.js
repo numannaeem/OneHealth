@@ -22,7 +22,7 @@ import baseUrl from '../baseUrl'
 import { useNavigate } from 'react-router-dom'
 
 export default function SignupPage () {
-	const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({
@@ -39,58 +39,58 @@ export default function SignupPage () {
 
   const handleChange = e => {
     e.preventDefault()
-		let value = e.target.value
-		if(e.target.name === 'gender') {
-			value = value.toLowerCase()
-			console.log(value)
-		}
+    let value = e.target.value
+    if (e.target.name === 'gender') {
+      value = value.toLowerCase()
+      console.log(value)
+    }
     setFormData(p => {
       p[e.target.name] = value
       return { ...p }
     })
   }
 
-	const handleSubmit = async (e) => {
-		try {
-			const res = await fetch(baseUrl + '/patients/register', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				credentials:'include',
-				body: JSON.stringify({
-					...formData,
-					role: 'patient'
-				})
-			})
-			if(res.ok) {
-				navigate('/dashboard')
-			}
-		} catch(err) {
-			alert(err)
-		}
-	}
+  const handleSubmit = async (e) => {
+    try {
+      const res = await fetch(baseUrl + '/patients/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          ...formData,
+          role: 'patient'
+        })
+      })
+      if (res.ok) {
+        navigate('/dashboard')
+      }
+    } catch (err) {
+      alert(err)
+    }
+  }
 
   return (
     <Flex
-      minH={'100vh'}
-      align={'center'}
-      justify={'center'}
-      bg={useColorModeValue('gray.50', 'gray.800')}
+      minH='100vh'
+      align='center'
+      justify='center'
+      bg={useColorModeValue('gray.100', 'gray.800')}
     >
-      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
-        <Stack align={'center'}>
-          <Heading fontSize={'4xl'} textAlign={'center'}>
+      <Stack spacing={8} mx='auto' maxW='lg' py={12} px={6}>
+        <Stack align='center'>
+          <Heading fontSize='4xl' textAlign='center'>
             Sign up
           </Heading>
-          <Text fontSize={'lg'} color={'gray.600'}>
+          <Text fontSize='lg' color='gray.600'>
             to enjoy all of our cool features ✌️
           </Text>
         </Stack>
         <Box
-          rounded={'lg'}
+          rounded='lg'
           bg={useColorModeValue('white', 'gray.700')}
-          boxShadow={'lg'}
+          boxShadow='lg'
           p={8}
         >
           <Stack spacing={4}>
@@ -98,7 +98,7 @@ export default function SignupPage () {
               <FormLabel>Name</FormLabel>
               <Input
                 onChange={handleChange}
-                value={formData['name']}
+                value={formData.name}
                 name='name'
                 type='text'
               />
@@ -109,7 +109,7 @@ export default function SignupPage () {
                   <FormLabel>Email address</FormLabel>
                   <Input
                     onChange={handleChange}
-                    value={formData['email']}
+                    value={formData.email}
                     name='email'
                     type='email'
                   />
@@ -120,7 +120,7 @@ export default function SignupPage () {
                   <FormLabel>Mobile</FormLabel>
                   <Input
                     onChange={handleChange}
-                    value={formData['mobile']}
+                    value={formData.mobile}
                     name='mobile'
                     type='tel'
                   />
@@ -132,7 +132,7 @@ export default function SignupPage () {
               <FormLabel>Address</FormLabel>
               <Textarea
                 onChange={handleChange}
-                value={formData['address']}
+                value={formData.address}
                 name='address'
                 type='text'
               />
@@ -142,16 +142,15 @@ export default function SignupPage () {
               <InputGroup>
                 <Input
                   onChange={handleChange}
-                  value={formData['password']}
+                  value={formData.password}
                   name='password'
                   type={showPassword ? 'text' : 'password'}
                 />
-                <InputRightElement h={'full'}>
+                <InputRightElement h='full'>
                   <Button
-                    variant={'ghost'}
+                    variant='ghost'
                     onClick={() =>
-                      setShowPassword(showPassword => !showPassword)
-                    }
+                      setShowPassword(showPassword => !showPassword)}
                   >
                     {showPassword ? <ViewIcon /> : <ViewOffIcon />}
                   </Button>
@@ -164,7 +163,7 @@ export default function SignupPage () {
                   <FormLabel>Age</FormLabel>
                   <Input
                     onChange={handleChange}
-                    value={formData['age']}
+                    value={formData.age}
                     name='age'
                     type='number'
                   />
@@ -196,9 +195,9 @@ export default function SignupPage () {
               </Button>
             </Stack>
             <Stack pt={6}>
-              <Text align={'center'}>
+              <Text align='center'>
                 Already a user?{' '}
-                <Link href='/login' color={'blue.400'}>
+                <Link href='/login' color='blue.400'>
                   Login
                 </Link>
               </Text>

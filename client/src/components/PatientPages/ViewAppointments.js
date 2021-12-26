@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/layout'
+import { Flex, Text } from '@chakra-ui/layout'
 import {
   Table,
   TableCaption,
@@ -7,13 +7,15 @@ import {
   Th,
   Thead,
   Tr,
-	useColorModeValue
+  useColorModeValue
 } from '@chakra-ui/react'
+import { TimeIcon, SmallCloseIcon, CheckIcon } from '@chakra-ui/icons'
 import React, { useEffect, useState } from 'react'
 import baseUrl from '../../baseUrl'
 
 function ViewAppointments ({ userId }) {
   const [appointments, setAppointments] = useState([])
+  const pendingColor = useColorModeValue('main.600', 'main.500')
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,6 +23,7 @@ function ViewAppointments ({ userId }) {
         const res = await fetch(`${baseUrl}/patients/${userId}/appointments`)
         if (res.ok) {
           const jsonRes = await res.json()
+          jsonRes.sort((a, b) => (a.datetime > b.datetime ? 1 : -1))
           setAppointments(jsonRes)
           console.log(jsonRes)
         }
@@ -34,7 +37,12 @@ function ViewAppointments ({ userId }) {
 
   return (
     <Flex mt={5}>
-      <Table shadow='md' borderRadius={'md'} bg={useColorModeValue('white', 'gray.800')} variant='simple'>
+      <Table
+        shadow='md'
+        borderRadius='md'
+        bg={useColorModeValue('white', 'gray.800')}
+        variant='simple'
+      >
         <TableCaption>All appointments</TableCaption>
         <Thead>
           <Tr>
@@ -52,10 +60,22 @@ function ViewAppointments ({ userId }) {
               <Td>{a.description}</Td>
               <Td>
                 {a.status === 'P'
-                  ? 'Pending'
+                  ? (
+                    <Text color={pendingColor}>
+                      <TimeIcon /> Pending
+                    </Text>
+                    )
                   : a.status === 'R'
-                  ? 'Rejected'
-                  : 'Approved'}
+                    ? (
+                      <Text color='red'>
+                        <SmallCloseIcon /> Rejected
+                      </Text>
+                      )
+                    : (
+                      <Text color='green'>
+                        <CheckIcon /> Accepted
+                      </Text>
+                      )}
               </Td>
             </Tr>
           ))}

@@ -1,6 +1,6 @@
 export { default as PageContainer } from './PageContainer/PageContainer'
 
-export { default as Nav } from './Nav/Nav'
+export { default as AdminNav } from './Nav/AdminNav'
 
 export { default as Footer } from './Footer/Footer'
 

@@ -5,6 +5,7 @@ import PatientNav from '../Layout/Nav/PatientNav'
 import PatientCards from './PatientCards'
 import NewAppointment from './NewAppointment'
 import ViewAppointments from './ViewAppointments'
+import DoctorDetails from './DoctorDetails'
 
 export default function PatientDashboard ({ userData, doctors }) {
   const navigate = useNavigate()
@@ -22,6 +23,10 @@ export default function PatientDashboard ({ userData, doctors }) {
         <Route
           path='/appointments'
           element={<ViewAppointments userId={userData._id} />}
+        />
+        <Route
+          path='/doctors'
+          element={<DoctorDetails userId={userData._id} />}
         />
         <Route path='/:anythingElse' element={<Navigate to='/' />} />
       </Routes>
