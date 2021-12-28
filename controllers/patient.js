@@ -50,14 +50,22 @@ module.exports.deletePatient = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
         throw new ExpressError('User not found', 404);
     }
-    const deletedPatient = await Patient.findByIdAndDelete(id).populate('appointments').populate('user')
+    const deletedPatient = await Patient.findByIdAndDelete(id).populate('appointments').populate('reports').populate('user')
     const userId = deletedPatient.user._id;
     await User.findByIdAndDelete(userId);
     if (deletedPatient.appointments.length) {
-        for (appointment of deletedPatient.appointments) {
+        for (let appointment of deletedPatient.appointments) {
             const appId = appointment._id
             const deletedApp = await Appointment.findByIdAndDelete(appId).populate('doctor')
             await Doctor.findByIdAndUpdate(deletedApp.doctor._id, { $pull: { appointments: appId } })
+        }
+    }
+
+    if (deletedPatient.reports.length) {
+        for (let report of deletedPatient.reports) {
+            const reptId = report._id;
+            const deletedRept = await Report.findByIdAndDelete(reptId).populate('doctor')
+            await Doctor.findByIdAndUpdate(deletedRept.doctor._id, { $pull: { reports: reptId } })
         }
     }
 

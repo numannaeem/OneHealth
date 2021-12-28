@@ -24,7 +24,7 @@ router.route('/:id')
     )
     .delete(
         validatePatient,
-        catchAsync(patientControllers.deletePatient)
+        patientControllers.deletePatient
     )
 //________________________________________________________________
 
