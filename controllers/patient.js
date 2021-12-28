@@ -138,13 +138,9 @@ module.exports.createAppointment = async (req, res) => {
 
 module.exports.editAppointment = async (req, res) => {
     const { appId } = req.params;
-    const { datetime, description, doctorId } = req.body
+    const { datetime, description } = req.body
 
-    const doctor = await Doctor.findById(doctorId);
-    if (!doctor) {
-        throw new ExpressError('User not found', 404)
-    }
-    const update = { datetime, description, doctor }
+    const update = { datetime, description }
     const updatedApp = await Appointment.findByIdAndUpdate(appId, update, { new: true })
     if (!updatedApp) {
         throw new ExpressError('No Appointments Yet', 404)

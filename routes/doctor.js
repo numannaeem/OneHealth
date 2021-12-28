@@ -57,8 +57,14 @@ router.route('/:id/reports')
         validateDoctor,
         catchAsync(doctorControllers.createReport)
     )
-    .patch()
-    .delete() //Pending
+    .patch(
+        validateDoctor,
+        catchAsync(doctorControllers.editReport)
+    )
+    .delete(
+        validateDoctor,
+        catchAsync(doctorControllers.deletedReport)
+    ) //Pending
 
 //________________________________________________________________
 

@@ -167,3 +167,11 @@ module.exports.createReport = async (req, res) => {
 
 }
 
+module.exports.editReport = async (req, res) => {
+
+}
+
+module.exports.deleteReport = async (req, res) => {
+
+}//Write canModify doctor middleware
+
