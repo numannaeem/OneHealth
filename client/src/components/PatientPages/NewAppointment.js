@@ -74,13 +74,7 @@ function NewAppointment ({ userId }) {
           status: 'success'
         })
       } else {
-        toast({
-          title: 'Something went wrong!',
-          description: 'Please try again later',
-          isClosable: true,
-          duration: 4000,
-          status: 'error'
-        })
+        throw new Error()
       }
     } catch (error) {
       toast({
@@ -120,11 +114,13 @@ function NewAppointment ({ userId }) {
                   Select one
                 </option>
                 {doctors?.map(d => {
-                  return (
-                    <option key={d._id} id={d._id}>
-                      {d.name}, {d.specialization}
-                    </option>
-                  )
+                  if (d.available)
+                    return (
+                      <option key={d._id} id={d._id}>
+                        {d.name}, {d.specialization}
+                      </option>
+                    )
+                  else return null
                 })}
               </Select>
             </FormControl>
