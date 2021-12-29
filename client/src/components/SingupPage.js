@@ -50,7 +50,8 @@ export default function SignupPage () {
     })
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
+    e.preventDefault()
     try {
       const res = await fetch(baseUrl + '/patients/register', {
         method: 'POST',
@@ -93,116 +94,115 @@ export default function SignupPage () {
           boxShadow='lg'
           p={8}
         >
-          <Stack spacing={4}>
-            <FormControl id='name' isRequired>
-              <FormLabel>Name</FormLabel>
-              <Input
-                onChange={handleChange}
-                value={formData.name}
-                name='name'
-                type='text'
-              />
-            </FormControl>
-            <HStack>
-              <Box>
-                <FormControl id='email' isRequired>
-                  <FormLabel>Email address</FormLabel>
-                  <Input
-                    onChange={handleChange}
-                    value={formData.email}
-                    name='email'
-                    type='email'
-                  />
-                </FormControl>
-              </Box>
-              <Box>
-                <FormControl id='mobile' isRequired>
-                  <FormLabel>Mobile</FormLabel>
-                  <Input
-                    onChange={handleChange}
-                    value={formData.mobile}
-                    name='mobile'
-                    type='tel'
-                  />
-                </FormControl>
-              </Box>
-            </HStack>
-
-            <FormControl id='address' isRequired>
-              <FormLabel>Address</FormLabel>
-              <Textarea
-                onChange={handleChange}
-                value={formData.address}
-                name='address'
-                type='text'
-              />
-            </FormControl>
-            <FormControl id='password' isRequired>
-              <FormLabel>Password</FormLabel>
-              <InputGroup>
+          <form onSubmit={handleSubmit}>
+            <Stack spacing={4}>
+              <FormControl id='name' isRequired>
+                <FormLabel>Name</FormLabel>
                 <Input
                   onChange={handleChange}
-                  value={formData.password}
-                  name='password'
-                  type={showPassword ? 'text' : 'password'}
+                  value={formData.name}
+                  name='name'
+                  type='text'
                 />
-                <InputRightElement h='full'>
-                  <Button
-                    variant='ghost'
-                    onClick={() =>
-                      setShowPassword(showPassword => !showPassword)}
-                  >
-                    {showPassword ? <ViewIcon /> : <ViewOffIcon />}
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-            </FormControl>
-            <HStack>
-              <Box>
-                <FormControl id='age' isRequired>
-                  <FormLabel>Age</FormLabel>
+              </FormControl>
+              <HStack>
+                <Box>
+                  <FormControl id='email' isRequired>
+                    <FormLabel>Email address</FormLabel>
+                    <Input
+                      onChange={handleChange}
+                      value={formData.email}
+                      name='email'
+                      type='email'
+                    />
+                  </FormControl>
+                </Box>
+                <Box>
+                  <FormControl id='mobile' isRequired>
+                    <FormLabel>Mobile</FormLabel>
+                    <Input
+                      onChange={handleChange}
+                      value={formData.mobile}
+                      name='mobile'
+                      type='tel'
+                    />
+                  </FormControl>
+                </Box>
+              </HStack>
+
+              <FormControl id='address' isRequired>
+                <FormLabel>Address</FormLabel>
+                <Textarea
+                  onChange={handleChange}
+                  value={formData.address}
+                  name='address'
+                  type='text'
+                />
+              </FormControl>
+              <FormControl id='password' isRequired>
+                <FormLabel>Password</FormLabel>
+                <InputGroup>
                   <Input
                     onChange={handleChange}
-                    value={formData.age}
-                    name='age'
-                    type='number'
+                    value={formData.password}
+                    name='password'
+                    type={showPassword ? 'text' : 'password'}
                   />
-                </FormControl>
-              </Box>
-              <Box flexGrow={1}>
-                <FormControl id='gender'>
-                  <FormLabel>Gender</FormLabel>
-                  <Select
-                    onChange={handleChange}
-                    name='gender'
-                  >
-                    <option>Male</option>
-                    <option>Female</option>
-                    <option>Other</option>
-                  </Select>
-                </FormControl>
-              </Box>
-            </HStack>
-            <Stack spacing={10} pt={2}>
-              <Button
-                loadingText='Submitting'
-                size='lg'
-                bgColor={btnColor}
-                colorScheme='yellow'
-                onClick={handleSubmit}
-              >
-                Sign up
-              </Button>
+                  <InputRightElement h='full'>
+                    <Button
+                      variant='ghost'
+                      onClick={() =>
+                        setShowPassword(showPassword => !showPassword)}
+                    >
+                      {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+              </FormControl>
+              <HStack>
+                <Box>
+                  <FormControl id='age' isRequired>
+                    <FormLabel>Age</FormLabel>
+                    <Input
+                      onChange={handleChange}
+                      value={formData.age}
+                      name='age'
+                      type='number'
+                    />
+                  </FormControl>
+                </Box>
+                <Box flexGrow={1}>
+                  <FormControl id='gender'>
+                    <FormLabel>Gender</FormLabel>
+                    <Select onChange={handleChange} name='gender'>
+                      <option>Male</option>
+                      <option>Female</option>
+                      <option>Other</option>
+                    </Select>
+                  </FormControl>
+                </Box>
+              </HStack>
+              <Stack spacing={10} pt={2}>
+                <Button
+                  loadingText='Submitting'
+                  size='lg'
+                  bgColor={btnColor}
+                  colorScheme='yellow'
+                  type='submit'
+                >
+                  Sign up
+                </Button>
+              </Stack>
+              <Stack pt={6}>
+                <Text align='center'>
+                  Already a user?{' '}
+                  <Link href='/login' color='blue.400'>
+                    Login
+                  </Link>
+                </Text>
+              </Stack>
             </Stack>
-            <Stack pt={6}>
-              <Text align='center'>
-                Already a user?{' '}
-                <Link href='/login' color='blue.400'>
-                  Login
-                </Link>
-              </Text>
-            </Stack>
-          </Stack>
+          </form>
         </Box>
       </Stack>
     </Flex>

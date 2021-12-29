@@ -3,12 +3,12 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Card, PageContent } from '../Layout'
 
-function AdminCards ({ docCount, patientCount, appCount }) {
+function DoctorCards ({ userData }) {
   const navigate = useNavigate()
   return (
     <PageContent
       title='Dashboard'
-      subtitle='Logged in as admin'
+      subtitle={`Logged in as ${userData.username}`}
     >
       <SimpleGrid columns={{ sm: 1, md: 2 }} spacing={10}>
         <Card
@@ -16,7 +16,7 @@ function AdminCards ({ docCount, patientCount, appCount }) {
         >
           <Flex alignItems='center' justifyContent='space-between'>
             <Text fontSize='4em' lineHeight='4rem' fontWeight='700'>
-              {docCount}
+              {}
             </Text>
             {/* <Stack alignItems="center">
                 <Icon as={FaChevronUp} color="gray.100" fontSize="2em" />
@@ -27,7 +27,7 @@ function AdminCards ({ docCount, patientCount, appCount }) {
         <Card title='Pending Appointments'>
           <Flex alignItems='center' justifyContent='space-between'>
             <Text fontSize='4em' lineHeight='4rem' fontWeight='700'>
-              {appCount}
+              {}
             </Text>
             {/* <Stack alignItems="center">
                 <Icon as={FaChevronDown} color="gray.100" fontSize="2em" />
@@ -37,7 +37,7 @@ function AdminCards ({ docCount, patientCount, appCount }) {
         </Card>
         <Card title='Total Patients'>
           <Text fontSize='4em' lineHeight='4rem' fontWeight='700'>
-            {patientCount}
+            {}
           </Text>
         </Card>
         <Card
@@ -53,4 +53,4 @@ function AdminCards ({ docCount, patientCount, appCount }) {
   )
 }
 
-export default AdminCards
+export default DoctorCards

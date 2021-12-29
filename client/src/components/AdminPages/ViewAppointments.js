@@ -1,43 +1,53 @@
-import { Flex, Text } from '@chakra-ui/layout'
+import { CheckIcon, SmallCloseIcon, TimeIcon } from '@chakra-ui/icons'
 import {
-  Spinner,
   Table,
+  useToast,
+  Flex,
+  useColorModeValue,
   TableCaption,
-  Tbody,
-  Td,
-  Th,
   Thead,
   Tr,
-  useColorModeValue
+  Th,
+  Td,
+  Tbody,
+  IconButton,
+  Spinner
 } from '@chakra-ui/react'
-import { TimeIcon, SmallCloseIcon, CheckIcon } from '@chakra-ui/icons'
 import React, { useEffect, useState } from 'react'
 import baseUrl from '../../baseUrl'
 
-function ViewAppointments ({ userId }) {
-  const [appointments, setAppointments] = useState([])
+function ViewAppointments () {
+  const toast = useToast()
+  const [apps, setApps] = useState([])
   const [loading, setLoading] = useState(true)
   const pendingColor = useColorModeValue('main.600', 'main.500')
   const tableColor = useColorModeValue('white', 'gray.800')
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchApps = async () => {
       setLoading(true)
       try {
-        const res = await fetch(`${baseUrl}/patients/${userId}/appointments`)
+        const res = await fetch(`${baseUrl}/appointments`)
         if (res.ok) {
           const jsonRes = await res.json()
-          jsonRes.sort((a, b) => (a.datetime > b.datetime ? 1 : -1))
-          setAppointments(jsonRes)
+          console.log(jsonRes)
+          setApps(jsonRes)
+        } else {
+          throw new Error('Failed to fetch')
         }
       } catch (error) {
-        alert(error)
+        toast({
+          title: 'Could not fetch appointments!',
+          description: 'Please try again later',
+          status: 'error',
+          isClosable: true,
+          duration: 3000
+        })
       }
       setLoading(false)
     }
-
-    fetchData()
-  }, [userId])
+    fetchApps()
+  }, [toast])
 
   if (loading) {
     return (
@@ -49,42 +59,50 @@ function ViewAppointments ({ userId }) {
 
   return (
     <Flex mt={5}>
-      <Table shadow='md' borderRadius='md' bg={tableColor} variant='simple'>
-        <TableCaption>All appointments</TableCaption>
+      <Table
+        shadow='md'
+        borderRadius='md'
+        bg={tableColor}
+        variant='simple'
+      >
+        <TableCaption>Manage appointments</TableCaption>
         <Thead>
           <Tr>
+            <Th>Patient</Th>
             <Th>Doctor</Th>
             <Th>Date &amp; time</Th>
             <Th>Reason</Th>
             <Th>Status</Th>
+            <Th>Accept/Reject</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {appointments.length > 0
+          {apps.length > 0
             ? (
-                appointments.map(a => (
+                apps.map(a => (
                   <Tr key={a._id}>
+                    <Td>{a.patient.name}</Td>
                     <Td>{a.doctor.name}</Td>
                     <Td>{new Date(a.datetime).toLocaleString('en-US')}</Td>
                     <Td>{a.description}</Td>
-                    <Td>
+                    <Td textAlign='center'>
                       {a.status === 'P'
                         ? (
-                          <Text color={pendingColor}>
-                            <TimeIcon /> Pending
-                          </Text>
+                          <TimeIcon color={pendingColor} />
                           )
                         : a.status === 'R'
                           ? (
-                            <Text color='red'>
-                              <SmallCloseIcon /> Rejected
-                            </Text>
+                            <SmallCloseIcon color='red' />
                             )
                           : (
-                            <Text color='green'>
-                              <CheckIcon /> Accepted
-                            </Text>
+                            <CheckIcon color='green' />
                             )}
+                    </Td>
+                    <Td>
+                      <Flex justify='space-evenly'>
+                        <IconButton size='sm' variant='outline' colorScheme='red' icon={<SmallCloseIcon />} />
+                        <IconButton size='sm' variant='outline' colorScheme='green' icon={<CheckIcon />} />
+                      </Flex>
                     </Td>
                   </Tr>
                 ))

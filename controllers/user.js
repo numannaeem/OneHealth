@@ -39,7 +39,10 @@ module.exports.login = async (req, res) => {
             if (!admin) {
                 throw new ExpressError('Unauthorized', 401)
             }
-            user = { ...admin._doc, role, username }
+            const docCount = await Doctor.countDocuments()
+            const patientCount = await Patient.countDocuments()
+            const appCount = await Appointment.countDocuments({status: 'P'})
+            user = { ...admin._doc, role, username, docCount, patientCount, appCount }
             return res.status(200).json(user)
             break;
 
@@ -51,7 +54,7 @@ module.exports.login = async (req, res) => {
 
 module.exports.getAllAppointments = async (req, res) => {
     const appointments = await Appointment.find({}).populate('doctor').populate('patient')
-    if (!appointments.length) {
+    if (!appointments) {
         throw new ExpressError('No Appointments Found', 404)
     }
     res.status(200).json(appointments)

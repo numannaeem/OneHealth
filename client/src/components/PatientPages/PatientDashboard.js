@@ -7,7 +7,7 @@ import NewAppointment from './NewAppointment'
 import ViewAppointments from './ViewAppointments'
 import DoctorDetails from './DoctorDetails'
 
-export default function PatientDashboard ({ userData, doctors }) {
+export default function PatientDashboard ({ userData }) {
   const navigate = useNavigate()
   if (!userData) navigate('/login')
 
@@ -18,7 +18,7 @@ export default function PatientDashboard ({ userData, doctors }) {
         <Route path='/' element={<PatientCards userData={userData} />} />
         <Route
           path='/new-appointment'
-          element={<NewAppointment doctors={doctors} userId={userData._id} />}
+          element={<NewAppointment userId={userData._id} />}
         />
         <Route
           path='/appointments'
