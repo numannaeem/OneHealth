@@ -1,9 +1,21 @@
 import { Flex, SimpleGrid, Text } from '@chakra-ui/layout'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import baseUrl from '../../baseUrl'
 import { Card, PageContent } from '../Layout'
 
 function AdminCards ({ docCount, patientCount, appCount }) {
+
+  useEffect(() => {
+    const fetchCount = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/`)
+      } catch (error) {
+        
+      }
+    }
+  }, [])
+
   const navigate = useNavigate()
   return (
     <PageContent

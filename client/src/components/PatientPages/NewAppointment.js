@@ -9,12 +9,14 @@ import {
   useColorModeValue,
   useToast
 } from '@chakra-ui/react'
+import {useNavigate} from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import baseUrl from '../../baseUrl'
 
 function NewAppointment ({ userId }) {
   const toast = useToast()
   const [doctors, setDoctors] = useState([])
+  const navigate = useNavigate()
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
@@ -73,6 +75,7 @@ function NewAppointment ({ userId }) {
           duration: 4000,
           status: 'success'
         })
+        setTimeout(() => navigate('/dashboard/appointments'), 100)
       } else {
         throw new Error()
       }
