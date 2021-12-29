@@ -10,7 +10,8 @@ import {
   Button,
   Heading,
   Text,
-  useColorModeValue
+  useColorModeValue,
+  useToast
 } from '@chakra-ui/react'
 import { SunIcon, MoonIcon } from '@chakra-ui/icons'
 import { Select } from '@chakra-ui/select'
@@ -40,7 +41,9 @@ export default function LoginPage ({ setUserData }) {
     }
   }
 
-  const handleSubmit = async (e) => {
+  const toast = useToast()
+
+  const handleSubmit = async e => {
     e.preventDefault()
     try {
       const res = await fetch(baseUrl + '/login', {
@@ -49,7 +52,7 @@ export default function LoginPage ({ setUserData }) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          username,
+          username: role === 'admin' ? 'admin' : username,
           password,
           role
         }),
@@ -57,12 +60,30 @@ export default function LoginPage ({ setUserData }) {
       })
       if (res.ok) {
         const jsonRes = await res.json()
-        localStorage.setItem('oneHealth', JSON.stringify({ username, password, role }))
+        console.log(jsonRes)
+        localStorage.setItem(
+          'oneHealth',
+          JSON.stringify({ username: role === 'admin' ? 'admin' : username, password, role })
+        )
         setUserData(jsonRes)
         window.location.replace('/dashboard')
+      } else {
+        toast({
+          title: 'Invalid credentials!',
+          description: 'Check your username/password and try again',
+          status: 'error',
+          isClosable: true,
+          duration: 3000
+        })
       }
     } catch (error) {
-      alert(error)
+      toast({
+        title: 'Something went wrong!',
+        description: 'Please try again later',
+        status: 'error',
+        isClosable: true,
+        duration: 3000
+      })
     }
   }
 
@@ -100,23 +121,25 @@ export default function LoginPage ({ setUserData }) {
           <Stack spacing={3}>
             <FormControl id='accountType'>
               <FormLabel>User type</FormLabel>
-              <Select
-                onChange={e => setRole(e.target.value.toLowerCase())}
-              >
+              <Select onChange={e => setRole(e.target.value.toLowerCase())}>
                 <option disabled>Select one</option>
                 <option value='doctor'>Doctor</option>
-                <option selected value='patient'>Patient</option>
+                <option selected value='patient'>
+                  Patient
+                </option>
                 <option value='admin'>Admin</option>
               </Select>
             </FormControl>
-            <FormControl id='username'>
-              <FormLabel>Email</FormLabel>
-              <Input
-                type='email'
-                value={username}
-                onChange={e => setUsername(e.target.value)}
-              />
-            </FormControl>
+            {role !== 'admin' && (
+              <FormControl id='username'>
+                <FormLabel>Email</FormLabel>
+                <Input
+                  type='email'
+                  value={username}
+                  onChange={e => setUsername(e.target.value)}
+                />
+              </FormControl>
+            )}
             <FormControl id='password'>
               <FormLabel>Password</FormLabel>
               <Input

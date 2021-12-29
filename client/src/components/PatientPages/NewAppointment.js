@@ -114,13 +114,13 @@ function NewAppointment ({ userId }) {
                   Select one
                 </option>
                 {doctors?.map(d => {
-                  if (d.available)
+                  if (d.available) {
                     return (
                       <option key={d._id} id={d._id}>
                         {d.name}, {d.specialization}
                       </option>
                     )
-                  else return null
+                  } else return null
                 })}
               </Select>
             </FormControl>

@@ -12,7 +12,7 @@ const { report } = require('../routes/user');
 
 module.exports.getAllPatients = async (req, res) => {
     const patients = await Patient.find({}).populate('user').populate('appointments');
-    if (!patients.length) {
+    if (!patients) {
         throw new ExpressError('Patients not found', 404)
     }
 

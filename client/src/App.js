@@ -7,14 +7,15 @@ import SignupPage from './components/SingupPage'
 import { useEffect, useState } from 'react'
 import PatientDashboard from './components/PatientPages/PatientDashboard'
 import baseUrl from './baseUrl'
+import DoctorDashboard from './components/DoctorPages/DoctorDashboard'
 
 function App () {
   const [userData, setUserData] = useState(null)
-  const [doctors, setDoctors] = useState([])
   const [loggedIn, setLoggedIn] = useState(false)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (userData) { return }
     const authUser = async () => {
       setLoading(true)
       const userCreds = JSON.parse(localStorage.getItem('oneHealth'))
@@ -35,7 +36,6 @@ function App () {
           if (res.ok) {
             const jsonRes = await res.json()
             setUserData(jsonRes)
-            setDoctors(jsonRes.doctors)
             setLoggedIn(true)
           }
         } catch (error) {
@@ -45,7 +45,7 @@ function App () {
       setLoading(false)
     }
     authUser()
-  }, [])
+  }, [userData])
 
   if (loading) {
     return (
@@ -78,9 +78,11 @@ function App () {
                   ? (
                     <AdminDashboard userData={userData} />
                     )
-                  : (
-                    <PatientDashboard doctors={doctors} userData={userData} />
-                    )
+                  : userData.role === 'patient'
+                    ? (
+                      <PatientDashboard userData={userData} />
+                      )
+                    : <DoctorDashboard userData={userData} />
               }
             />
           )}
