@@ -98,6 +98,13 @@ export default function PatientNav ({ name }) {
                 </MenuGroup>
               </MenuList>
             </Menu>
+            <Button
+              onClick={() => navigate('/dashboard/reports')}
+              colorScheme='navItem'
+              variant='ghost'
+            >
+              View reports
+            </Button>
           </Stack>
           <Stack
             ml={{ sm: 'auto !important' }}

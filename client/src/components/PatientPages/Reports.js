@@ -1,29 +1,40 @@
-import { Spinner, Table, TableCaption, Tbody, Td, Th, Thead, Tr, useColorModeValue, useToast } from '@chakra-ui/react'
+import {
+  Spinner,
+  Table,
+  TableCaption,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  useColorModeValue,
+  useToast
+} from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { Flex } from '@chakra-ui/layout'
 import baseUrl from '../../baseUrl'
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
 
-function DoctorDetails () {
+function Reports ({ userId }) {
   const toast = useToast()
   const tableColor = useColorModeValue('white', 'gray.800')
   const [loading, setLoading] = useState(true)
-  const [doctors, setDoctors] = useState([])
+  const [reports, setReports] = useState([])
   useEffect(() => {
-    const fetchDoctors = async () => {
+    const fetchReports = async () => {
       setLoading(true)
       try {
-        const res = await fetch(`${baseUrl}/doctors`)
+        const res = await fetch(`${baseUrl}/patients/${userId}/reports`)
         if (res.ok) {
           const jsonRes = await res.json()
-          setDoctors(jsonRes)
           console.log(jsonRes)
+          setReports(jsonRes)
         } else {
           throw new Error('Failed to fetch')
         }
       } catch (error) {
         toast({
-          title: 'Could not fetch doctors!',
+          title: 'Could not fetch reports!',
           description: 'Please try again later',
           status: 'error',
           isClosable: true,
@@ -32,8 +43,8 @@ function DoctorDetails () {
       }
       setLoading(false)
     }
-    fetchDoctors()
-  }, [toast])
+    fetchReports()
+  }, [toast, userId])
 
   if (loading) {
     return (
@@ -46,32 +57,28 @@ function DoctorDetails () {
   return (
     <Flex mt={5}>
       <Table shadow='md' borderRadius='md' bg={tableColor} variant='simple'>
-        <TableCaption>All doctor details</TableCaption>
+        <TableCaption>All your reports</TableCaption>
         <Thead>
           <Tr>
-            <Th>Name</Th>
-            <Th>Experience (years)</Th>
-            <Th>Specialization</Th>
-            <Th>Qualifications</Th>
-            <Th>Availability</Th>
+            <Th>By doctor</Th>
+            <Th>Title</Th>
+            <Th>Description</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {doctors.length > 0
-            ? doctors.map(d => (
+          {reports.length > 0
+            ? reports.map(r => (
               <Tr>
-                <Td>{d.name}</Td>
-                <Td>{d.experience}</Td>
-                <Td>{d.specialization}</Td>
-                <Td>{d.qualifications.join(', ')}</Td>
-                <Td>{d.available ? <CheckIcon color='green' /> : <CloseIcon color='red' />}</Td>
+                <Td verticalAlign='baseline'>{r.doctor}</Td>
+                <Td verticalAlign='baseline' fontWeight='bold'>{r.title}</Td>
+                <Td maxW='360px' overflowWrap='anywhere'>{r.description}</Td>
               </Tr>
               ))
-            : <Tr><Td>No doctors found!</Td></Tr>}
+            : <Tr><Td>No reports found</Td></Tr>}
         </Tbody>
       </Table>
     </Flex>
   )
 }
 
-export default DoctorDetails
+export default Reports

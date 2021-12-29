@@ -74,12 +74,19 @@ module.exports.deletePatient = async (req, res) => {
 
 module.exports.getReports = async (req, res) => {
     const { id } = req.params;
-    const patient = await Patient.findById(id).populate('reports')
-    const { reports } = patient
-    if (!reports.length) {
+    const reports = await Report.find({ patient: id }).populate('doctor')
+    if (!reports) {
         throw new ExpressError('No Reports Yet', 404)
     }
-    res.status(200).json(reports)
+
+    // basically trying to replace the whole doctor object with just the doctor name, 
+    // 👇 cause that's all I need 
+    const modifiedReports = await reports.map(r => {
+        const docName = r.doctor.name
+        return {...r._doc, doctor: docName}     // even idk what I'm doing here, but this works.
+    })
+    
+    res.status(200).json(modifiedReports)
 }
 
 module.exports.findReport = async (req, res) => {

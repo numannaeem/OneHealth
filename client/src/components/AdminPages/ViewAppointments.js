@@ -27,7 +27,7 @@ function ViewAppointments () {
 
   const handleStatusChange = async (status, app) => {
     try {
-      let reqBody = {
+      const reqBody = {
         datetime: app.datetime,
         description: app.description,
         status: 'R'
@@ -46,9 +46,9 @@ function ViewAppointments () {
         }
       )
       if (res.ok) {
-        toast({ title: 'Successfully changed', status:'success', duration: 4000 })
+        toast({ title: 'Successfully changed', status: 'success', duration: 4000 })
         setApps(prev => prev.map(a => {
-          if(a._id === app._id) {
+          if (a._id === app._id) {
             a.status = reqBody.status
           }
           return a
@@ -100,7 +100,7 @@ function ViewAppointments () {
         }
       )
       if (res.ok) {
-        toast({ title: 'Successfully deleted',status:'success', duration: 4000 })
+        toast({ title: 'Successfully deleted', status: 'success', duration: 4000 })
         setApps(prev => prev.filter(a => a._id !== app._id))
       }
     } catch (error) {
@@ -138,57 +138,65 @@ function ViewAppointments () {
           </Tr>
         </Thead>
         <Tbody>
-          {apps.length > 0 ? (
-            apps.map(a => (
-              <Tr key={a._id}>
-                <Td>{a.patient.name}</Td>
-                <Td>{a.doctor.name}</Td>
-                <Td>{new Date(a.datetime).toLocaleString('en-US')}</Td>
-                <Td>{a.description}</Td>
-                <Td textAlign='center'>
-                  {a.status === 'P' ? (
-                    <TimeIcon color={pendingColor} />
-                  ) : a.status === 'R' ? (
-                    <SmallCloseIcon color='red' />
-                  ) : (
-                    <CheckIcon color='green' />
-                  )}
-                </Td>
-                <Td>
-                  {a.status === 'P' ? (
-                    <Flex justify='space-evenly'>
+          {apps.length > 0
+            ? (
+                apps.map(a => (
+                  <Tr key={a._id}>
+                    <Td>{a.patient.name}</Td>
+                    <Td>{a.doctor.name}</Td>
+                    <Td>{new Date(a.datetime).toLocaleString('en-US')}</Td>
+                    <Td>{a.description}</Td>
+                    <Td textAlign='center'>
+                      {a.status === 'P'
+                        ? (
+                          <TimeIcon color={pendingColor} />
+                          )
+                        : a.status === 'R'
+                          ? (
+                            <SmallCloseIcon color='red' />
+                            )
+                          : (
+                            <CheckIcon color='green' />
+                            )}
+                    </Td>
+                    <Td>
+                      {a.status === 'P'
+                        ? (
+                          <Flex justify='space-evenly'>
+                            <IconButton
+                              onClick={() => handleStatusChange('reject', a)}
+                              size='sm'
+                              variant='outline'
+                              colorScheme='red'
+                              icon={<SmallCloseIcon />}
+                            />
+                            <IconButton
+                              onClick={() => handleStatusChange('accept', a)}
+                              size='sm'
+                              variant='outline'
+                              colorScheme='green'
+                              icon={<CheckIcon />}
+                            />
+                          </Flex>
+                          )
+                        : <Text textAlign='center' color='gray.600'>—</Text>}
+                    </Td>
+                    <Td textAlign='center'>
                       <IconButton
-                        onClick={() => handleStatusChange('reject', a)}
-                        size='sm'
-                        variant='outline'
-                        colorScheme='red'
-                        icon={<SmallCloseIcon />}
+                        onClick={() => deleteApp(a)}
+                        variant='ghost'
+                        color='red'
+                        icon={<MdDeleteOutline />}
                       />
-                      <IconButton
-                        onClick={() => handleStatusChange('accept', a)}
-                        size='sm'
-                        variant='outline'
-                        colorScheme='green'
-                        icon={<CheckIcon />}
-                      />
-                    </Flex>
-                  ) : <Text textAlign='center' color='gray.600'>—</Text>}
-                </Td>
-                <Td textAlign='center'>
-                  <IconButton
-                    onClick={() => deleteApp(a)}
-                    variant='ghost'
-                    color='red'
-                    icon={<MdDeleteOutline />}
-                  />
-                </Td>
+                    </Td>
+                  </Tr>
+                ))
+              )
+            : (
+              <Tr>
+                <Td textAlign='center'>No appointments on the database</Td>
               </Tr>
-            ))
-          ) : (
-            <Tr>
-              <Td textAlign='center'>No appointments on the database</Td>
-            </Tr>
-          )}
+              )}
         </Tbody>
       </Table>
     </Flex>

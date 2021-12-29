@@ -19,12 +19,16 @@ function PatientCards ({ userData }) {
             <Text fontSize='4em' lineHeight='4rem' fontWeight='700'>
               {userData.appointments.length || 0}
             </Text>
-            {/* <Stack alignItems="center">
-                <Icon as={FaChevronUp} color="gray.100" fontSize="2em" />
-                <Badge colorScheme="green">+2.5%</Badge>
-              </Stack> */}
           </Flex>
         </Card>
+        <Card
+          bg='main.500'
+          color='gray.800'
+          _hover={{ backgroundColor: 'main.300', cursor: 'pointer' }}
+          title='View Doctors >>'
+          subtitle='View all doctor details'
+          onClick={() => navigate('/dashboard/doctors')}
+        />
         <Card
           bg='main.500'
           color='gray.800'
@@ -37,9 +41,9 @@ function PatientCards ({ userData }) {
           bg='main.500'
           color='gray.800'
           _hover={{ backgroundColor: 'main.300', cursor: 'pointer' }}
-          title='View Doctors >>'
-          subtitle='View all doctor details'
-          onClick={() => navigate('/dashboard/doctors')}
+          title='View Reports >>'
+          subtitle='View the reports sent by your doctors'
+          onClick={() => navigate('/dashboard/reports')}
         />
       </SimpleGrid>
     </PageContent>

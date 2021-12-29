@@ -60,7 +60,6 @@ export default function LoginPage ({ setUserData }) {
       })
       if (res.ok) {
         const jsonRes = await res.json()
-        console.log(jsonRes)
         localStorage.setItem(
           'oneHealth',
           JSON.stringify({ username: role === 'admin' ? 'admin' : username, password, role })
@@ -118,55 +117,56 @@ export default function LoginPage ({ setUserData }) {
           </Text>
         </Stack>
         <Box rounded='lg' bg={bgColor} boxShadow='lg' p={8}>
-          <Stack spacing={3}>
-            <FormControl id='accountType'>
-              <FormLabel>User type</FormLabel>
-              <Select onChange={e => setRole(e.target.value.toLowerCase())}>
-                <option disabled>Select one</option>
-                <option value='doctor'>Doctor</option>
-                <option selected value='patient'>
-                  Patient
-                </option>
-                <option value='admin'>Admin</option>
-              </Select>
-            </FormControl>
-            {role !== 'admin' && (
-              <FormControl id='username'>
-                <FormLabel>Email</FormLabel>
+          <form onSubmit={handleSubmit}>
+            <Stack spacing={3}>
+              <FormControl id='accountType'>
+                <FormLabel>User type</FormLabel>
+                <Select onChange={e => setRole(e.target.value.toLowerCase())}>
+                  <option disabled>Select one</option>
+                  <option value='doctor'>Doctor</option>
+                  <option selected value='patient'>
+                    Patient
+                  </option>
+                  <option value='admin'>Admin</option>
+                </Select>
+              </FormControl>
+              {role !== 'admin' && (
+                <FormControl id='username'>
+                  <FormLabel>Email</FormLabel>
+                  <Input
+                    type='email'
+                    value={username}
+                    onChange={e => setUsername(e.target.value)}
+                  />
+                </FormControl>
+              )}
+              <FormControl id='password'>
+                <FormLabel>Password</FormLabel>
                 <Input
-                  type='email'
-                  value={username}
-                  onChange={e => setUsername(e.target.value)}
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  type='password'
                 />
               </FormControl>
-            )}
-            <FormControl id='password'>
-              <FormLabel>Password</FormLabel>
-              <Input
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                type='password'
-              />
-            </FormControl>
-            <Stack spacing={10}>
-              <Stack
-                direction={{ base: 'column', sm: 'row' }}
-                align='start'
-                justify='space-between'
-              >
-                <Link href='/register' color={textColor}>
-                  Sign up instead
-                </Link>
+              <Stack pt={4} spacing={5}>
+                <Button
+                  type='submit'
+                  bgColor={btnColor}
+                  colorScheme='yellow'
+                >
+                  Sign in
+                </Button>
+                <Stack>
+                  <Text align='center'>
+                    New here?{' '}
+                    <Link href='/register' color='blue.400'>
+                      Register
+                    </Link>
+                  </Text>
+                </Stack>
               </Stack>
-              <Button
-                onClick={handleSubmit}
-                bgColor={btnColor}
-                colorScheme='yellow'
-              >
-                Sign in
-              </Button>
             </Stack>
-          </Stack>
+          </form>
         </Box>
       </Stack>
     </Flex>
