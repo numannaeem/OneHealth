@@ -138,9 +138,9 @@ module.exports.createAppointment = async (req, res) => {
 
 module.exports.editAppointment = async (req, res) => {
     const { appId } = req.params;
-    const { datetime, description } = req.body
+    const { datetime, description, status } = req.body
 
-    const update = { datetime, description }
+    const update = { datetime, description, status }
     const updatedApp = await Appointment.findByIdAndUpdate(appId, update, { new: true })
     if (!updatedApp) {
         throw new ExpressError('No Appointments Yet', 404)
