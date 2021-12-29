@@ -41,7 +41,7 @@ module.exports.login = async (req, res) => {
             }
             const docCount = await Doctor.countDocuments()
             const patientCount = await Patient.countDocuments()
-            const appCount = await Appointment.countDocuments({status: 'P'})
+            const appCount = await Appointment.countDocuments({ status: 'P' })
             user = { ...admin._doc, role, username, docCount, patientCount, appCount }
             return res.status(200).json(user)
             break;
@@ -74,4 +74,14 @@ module.exports.getAllUsers = async (req, res) => {
         throw new ExpressError('No Users Found', 404)
     }
     res.status(200).json(users)
+}
+
+module.exports.countDocs = async (req, res) => {
+    const doctors = await Doctor.countDocuments();
+    const patients = await Patient.countDocuments();
+    const appointments = await Appointment.countDocuments();
+    const reports = await Report.countDocuments();
+
+    const count = { doctors, patients, appointments, reports }
+    res.status(200).json(count);
 }

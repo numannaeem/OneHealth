@@ -60,7 +60,7 @@ router.route('/:id/reports')
     .patch(
         validateDoctor,
         catchAsync(doctorControllers.editReport)
-    )
+    )//Pending
     .delete(
         validateDoctor,
         catchAsync(doctorControllers.deletedReport)
