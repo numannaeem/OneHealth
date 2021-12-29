@@ -14,4 +14,6 @@ router.get('/reports', isAdmin, catchAsync(userControllers.getAllReports))
 
 router.get('/users', isAdmin, catchAsync(userControllers.getAllUsers))
 
+router.get('/countDocs', isAdmin, catchAsync(userControllers.countDocs))
+
 module.exports = router;
