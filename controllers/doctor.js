@@ -15,7 +15,7 @@ module.exports.getAllDoctors = async (req, res) => {
     } else {
         doctors = await Doctor.find({}).populate('appointments')
     }
-    if (!doctors.length) {
+    if (!doctors) {
         throw new ExpressError('No Doctors Found', 404)
     }
     return res.status(200).json(doctors)
@@ -93,9 +93,10 @@ module.exports.deleteDoctor = async (req, res) => {
 
 module.exports.getAppointments = async (req, res) => {
     const { id } = req.params
-    const doctor = await Doctor.findById(id).populate('appointments')
-    const { appointments } = doctor
-    if (!appointments.length) {
+    const appointments = await Appointment.find({ doctor: id}).populate('patient')
+    // const doctor = await Doctor.findById(id).populate('appointments')
+    // const { appointments } = doctor
+    if (!appointments) {
         throw new ExpressError('No Appointments Yet', 404)
     }
     return res.status(200).json(appointments)

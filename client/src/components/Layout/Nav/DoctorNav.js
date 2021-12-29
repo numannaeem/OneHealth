@@ -17,13 +17,13 @@ import {
   Tooltip
 } from '@chakra-ui/react'
 
-import { FaChevronDown, FaUserCircle } from 'react-icons/fa'
+import { FaUserCircle } from 'react-icons/fa'
 
 import './Nav.scss'
 import { MoonIcon, SunIcon } from '@chakra-ui/icons'
 import { useNavigate } from 'react-router-dom'
 
-export default function AdminNav ({ name }) {
+export default function DoctorNav ({ name }) {
   // colors
   const bgColor = useColorModeValue('white', 'gray.800')
 
@@ -76,13 +76,13 @@ export default function AdminNav ({ name }) {
           </Flex>
           <Stack direction={['column', 'row']}>
             <Button
-              onClick={() => navigate('/dashboard/add-doctor')}
+              onClick={() => navigate('/dashboard/view-appointments')}
               colorScheme='navItem'
               variant='ghost'
             >
-              Add Doctor
+              View appointments
             </Button>
-            <Menu>
+            {/* <Menu>
               <MenuButton
                 as={Button}
                 colorScheme='navItem'
@@ -101,14 +101,14 @@ export default function AdminNav ({ name }) {
                   </MenuItem>
                 </MenuGroup>
               </MenuList>
-            </Menu>
+            </Menu> */}
           </Stack>
           <Stack
             align='center'
             direction={['column', 'row']}
             ml={{ sm: 'auto !important' }}
           >
-            <ColorModeToggleButton mr='2' />
+            <ColorModeToggleButton mx='2' />
             <Menu>
               <MenuButton
                 as={Button}
