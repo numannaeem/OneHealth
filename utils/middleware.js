@@ -45,6 +45,23 @@ module.exports.canModifyPatient = catchAsync(async (req, res, next) => {
 
 })
 
+module.exports.canModifyDoctor = async (req, res) => {
+    const { reptId, id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id) || !mongoose.Types.ObjectId.isValid(reptId)) {
+        throw new ExpressError('Appointment not found', 404);
+    }
+    const report = await Report.findById(reptId);
+    if (!report) {
+        throw new ExpressError('Report not found', 404);
+    }
+    if (report.patient.valueOf() === id) {
+        next()
+    } else {
+        throw new ExpressError('Unauthorized', 401)
+    }
+
+}
+
 module.exports.isAdmin = (req, res, next) => {
     if ((req.session.passport) && (req.session.passport.user === 'admin')) {
         next()

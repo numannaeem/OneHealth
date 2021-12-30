@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const catchAsync = require('../utils/catchAsync');
-const { isAdmin, validateDoctor } = require('../utils/middleware')
+const { isAdmin, validateDoctor, canModifyDoctor } = require('../utils/middleware')
 const doctorControllers = require('../controllers/doctor')
 
 //________________________________________________________________
@@ -59,10 +59,12 @@ router.route('/:id/reports')
     )
     .patch(
         validateDoctor,
+        canModifyDoctor,
         catchAsync(doctorControllers.editReport)
     )//Pending
     .delete(
         validateDoctor,
+        canModifyDoctor,
         catchAsync(doctorControllers.deleteReport)
     ) //Pending
 

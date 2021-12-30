@@ -93,7 +93,7 @@ module.exports.deleteDoctor = async (req, res) => {
 
 module.exports.getAppointments = async (req, res) => {
     const { id } = req.params
-    const appointments = await Appointment.find({ doctor: id}).populate('patient')
+    const appointments = await Appointment.find({ doctor: id }).populate('patient')
     // const doctor = await Doctor.findById(id).populate('appointments')
     // const { appointments } = doctor
     if (!appointments) {
@@ -174,5 +174,5 @@ module.exports.editReport = async (req, res) => {
 
 module.exports.deleteReport = async (req, res) => {
 
-}//Write canModify doctor middleware
+}
 
