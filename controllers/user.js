@@ -19,11 +19,7 @@ module.exports.login = async (req, res) => {
             if (!patient) {
                 throw new ExpressError('Unauthorized', 401)
             }
-            const doctors = await Doctor.find()
-            if (!doctors.length) {
-                throw new ExpressError('Doctor not found', 404)
-            }
-            user = { ...patient._doc, role, username, doctors }
+            user = { ...patient._doc, role, username }
             return res.status(200).json(user)
             break;
         case 'doctor':
@@ -76,7 +72,7 @@ module.exports.getAllUsers = async (req, res) => {
 module.exports.countDocs = async (req, res) => {
     const doctors = await Doctor.countDocuments();
     const patients = await Patient.countDocuments();
-    const appointments = await Appointment.countDocuments({status: 'P'});
+    const appointments = await Appointment.countDocuments({ status: 'P' });
     const reports = await Report.countDocuments();
 
     const count = { doctors, patients, appointments, reports }
