@@ -9,10 +9,12 @@ import {
   useToast
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import baseUrl from '../../baseUrl'
 
 function NewDoctor () {
   const toast = useToast()
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -57,16 +59,7 @@ function NewDoctor () {
           duration: 4000,
           status: 'success'
         })
-        setFormData({
-          email: '',
-          password: '',
-          name: '',
-          specialization: '',
-          available: '',
-          qualifications: '',
-          experience: '',
-          DOB: ''
-        })
+        setTimeout(() => navigate('/dashboard/appointments'), 100)
       } else {
         throw new Error()
       }

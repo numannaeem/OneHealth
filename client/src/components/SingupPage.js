@@ -65,7 +65,12 @@ export default function SignupPage () {
         })
       })
       if (res.ok) {
-        navigate('/dashboard')
+        localStorage.setItem('oneHealth', JSON.stringify({
+          username: formData.email,
+          password: formData.password,
+          role: 'patient'
+        }))
+        window.location.replace('/dashboard')
       }
     } catch (err) {
       alert(err)
@@ -85,7 +90,7 @@ export default function SignupPage () {
             Sign up
           </Heading>
           <Text fontSize='lg' color='gray.600'>
-            to enjoy all of our cool features ✌️
+            to enjoy all of our services ✌️
           </Text>
         </Stack>
         <Box
@@ -182,18 +187,16 @@ export default function SignupPage () {
                   </FormControl>
                 </Box>
               </HStack>
-              <Stack spacing={10} pt={2}>
+              <Stack spacing={5} pt={3}>
                 <Button
                   loadingText='Submitting'
-                  size='lg'
                   bgColor={btnColor}
                   colorScheme='yellow'
                   type='submit'
                 >
                   Sign up
                 </Button>
-              </Stack>
-              <Stack pt={6}>
+
                 <Text align='center'>
                   Already a user?{' '}
                   <Link href='/login' color='blue.400'>

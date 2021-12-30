@@ -39,10 +39,7 @@ module.exports.login = async (req, res) => {
             if (!admin) {
                 throw new ExpressError('Unauthorized', 401)
             }
-            const docCount = await Doctor.countDocuments()
-            const patientCount = await Patient.countDocuments()
-            const appCount = await Appointment.countDocuments({ status: 'P' })
-            user = { ...admin._doc, role, username, docCount, patientCount, appCount }
+            user = { ...admin._doc, role, username }
             return res.status(200).json(user)
             break;
 
@@ -79,7 +76,7 @@ module.exports.getAllUsers = async (req, res) => {
 module.exports.countDocs = async (req, res) => {
     const doctors = await Doctor.countDocuments();
     const patients = await Patient.countDocuments();
-    const appointments = await Appointment.countDocuments();
+    const appointments = await Appointment.countDocuments({status: 'P'});
     const reports = await Report.countDocuments();
 
     const count = { doctors, patients, appointments, reports }

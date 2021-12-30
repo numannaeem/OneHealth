@@ -74,35 +74,6 @@ export default function DoctorNav ({ name }) {
               OneHealth
             </Text>
           </Flex>
-          <Stack direction={['column', 'row']}>
-            <Button
-              onClick={() => navigate('/dashboard/view-appointments')}
-              colorScheme='navItem'
-              variant='ghost'
-            >
-              View appointments
-            </Button>
-            {/* <Menu>
-              <MenuButton
-                as={Button}
-                colorScheme='navItem'
-                variant='ghost'
-                rightIcon={<Icon as={FaChevronDown} color='navItem.500' />}
-              >
-                Users
-              </MenuButton>
-              <MenuList>
-                <MenuGroup title='View Users'>
-                  <MenuItem onClick={() => navigate('/dashboard/all-doctors')}>
-                    Doctors
-                  </MenuItem>
-                  <MenuItem onClick={() => navigate('/dashboard/all-patients')}>
-                    Patients
-                  </MenuItem>
-                </MenuGroup>
-              </MenuList>
-            </Menu> */}
-          </Stack>
           <Stack
             align='center'
             direction={['column', 'row']}

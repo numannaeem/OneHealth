@@ -50,7 +50,7 @@ function ViewAppointments ({ userId }) {
   return (
     <Flex mt={5}>
       <Table shadow='md' borderRadius='md' bg={tableColor} variant='simple'>
-        <TableCaption>All appointments</TableCaption>
+        <TableCaption>Your appointments</TableCaption>
         <Thead>
           <Tr>
             <Th>Doctor</Th>

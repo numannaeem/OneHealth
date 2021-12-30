@@ -20,11 +20,7 @@ export default function AdminDashboard ({ userData }) {
         <Route
           path='/'
           element={
-            <AdminCards
-              patientCount={userData.patientCount}
-              docCount={userData.docCount}
-              appCount={userData.appCount}
-            />
+            <AdminCards />
           }
         />
         <Route path='/add-doctor' element={<NewDoctor />} />
