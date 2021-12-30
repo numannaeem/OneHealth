@@ -79,11 +79,9 @@ module.exports.getReports = async (req, res) => {
         throw new ExpressError('No Reports Yet', 404)
     }
 
-    // basically trying to replace the whole doctor object with just the doctor name, 
-    // 👇 cause that's all I need 
     const modifiedReports = await reports.map(r => {
         const docName = r.doctor.name
-        return {...r._doc, doctor: docName}     // even idk what I'm doing here, but this works.
+        return {...r._doc, doctor: docName}
     })
     
     res.status(200).json(modifiedReports)

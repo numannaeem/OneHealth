@@ -126,6 +126,7 @@ export default function SignupPage () {
                   <FormControl id='mobile' isRequired>
                     <FormLabel>Mobile</FormLabel>
                     <Input
+                      pattern='[0-9]{10}'
                       onChange={handleChange}
                       value={formData.mobile}
                       name='mobile'
