@@ -19,10 +19,8 @@ import {
 import { useState } from 'react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import baseUrl from '../baseUrl'
-import { useNavigate } from 'react-router-dom'
 
 export default function SignupPage () {
-  const navigate = useNavigate()
 
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({

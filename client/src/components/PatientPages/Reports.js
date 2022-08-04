@@ -13,7 +13,6 @@ import {
 import React, { useEffect, useState } from 'react'
 import { Flex } from '@chakra-ui/layout'
 import baseUrl from '../../baseUrl'
-import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
 
 function Reports ({ userId }) {
   const toast = useToast()
